@@ -1,0 +1,60 @@
+# To override a setting for a specific file, use !
+# eg: !foo.dll
+
+
+# Compiled source #
+
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pdb
+
+
+# Visual Studio files & folders #
+
+*.suo
+*.user
+*.orig
+.[Vv][Ss]
+[Bb]in/
+[Oo]bj/
+
+
+# NuGet Packages #
+
+[Pp]ackages/
+
+
+# Packages #
+
+# It's better to unpack these files and commit the raw source git has its own built in compression methods
+
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+
+# Logs & Databases #
+
+*.log
+*.sql
+*.sqlite
+
+
+# OS Generated Files #
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.[Tt]rashes
+ehthumbs.db
+[Tt]humbs.db
