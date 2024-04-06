@@ -1,0 +1,269 @@
+﻿<local:BaseWindow
+    x:TypeArguments="viewModels:ISettingsViewModel"
+    x:Class="ASA_Server_Manager.Views.SettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:ASA_Server_Manager.Views"
+    xmlns:viewModels="clr-namespace:ASA_Server_Manager.Interfaces.ViewModels"
+    xmlns:viewModels1="clr-namespace:ASA_Server_Manager.ViewModels"
+    xmlns:controls="clr-namespace:ASA_Server_Manager.Controls"
+    xmlns:enums="clr-namespace:ASA_Server_Manager.Enums"
+    xmlns:converters="clr-namespace:ASA_Server_Manager.Common.Converters"
+    xmlns:attached="clr-namespace:ASA_Server_Manager.Attached"
+    xmlns:configs="clr-namespace:ASA_Server_Manager.Configs"
+    mc:Ignorable="d"
+    Title="{Binding WindowTitle}"
+    Height="650"
+    Width="750"
+    WindowStartupLocation="CenterOwner"
+    FontSize="{DynamicResource FontSize}"
+    ResizeMode="CanResize"
+    SizeToContent="Height"
+    WindowStyle="SingleBorderWindow"
+    d:DataContext="{d:DesignInstance viewModels1:SettingsViewModel}">
+
+    <Window.Resources>
+
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="GroupBox" BasedOn="{StaticResource {x:Type GroupBox}}">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="controls:SettingsControl" BasedOn="{StaticResource {x:Type controls:SettingsControl}}">
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Padding" Value="15,0" />
+        </Style>
+
+        <Style x:Key="BrowseButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Content" Value="..." />
+            <Setter Property="Command" Value="{Binding BrowseFileCommand}" />
+        </Style>
+
+        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="controls:HintedTextBox" BasedOn="{StaticResource {x:Type controls:HintedTextBox}}">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="controls:NumericSpinner">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Width" Value="70" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Step" Value="1" />
+            <Setter Property="Decimals" Value="0" />
+            <Setter Property="MinValue" Value="0" />
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+
+                <GroupBox Header="Server" Grid.IsSharedSizeScope="True">
+
+                    <StackPanel Margin="5">
+
+                        <!-- Server Type -->
+                        <controls:SettingsControl
+                            Label="Server Type:"
+                            InfoText="This setting determines the server management method:&#x0a;&#x2022; SteamCMD: This method uses SteamCMD for installation and updates. It can be associated with an existing SteamCMD server installation.&#x0a;&#x2022; Standalone: This method connects to an existing ASA server installation. However, it doesn't support updates through this application.">
+
+                            <ComboBox
+                                Padding="0"
+                                ItemsSource="{Binding Source={x:Type enums:ServerInstallType}, Converter={converters:EnumToItemsSourceConverter}}"
+                                SelectedValue="{Binding SelectedServerType}" />
+                        </controls:SettingsControl>
+
+                        <!-- SteamCMD Path -->
+                        <controls:SettingsControl
+                            Label="SteamCMD:"
+                            InfoText="Note: The exe path can be relative to this installation."
+                            Visibility="{Binding SelectedServerType, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static enums:ServerInstallType.SteamCMD}}">
+
+                            <controls:HintedTextBox
+                                Text="{Binding SteamCmdPath, UpdateSourceTrigger=PropertyChanged}"
+                                Hint="C:\SteamCMD\steamcmd.exe" />
+
+                            <controls:SettingsControl.SecondaryControl>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Button
+                                        Content="Install"
+                                        Command="{Binding InstallSteamCmdCommand}" />
+
+                                    <Button
+                                        Style="{StaticResource BrowseButton}"
+                                        CommandParameter="{x:Static enums:FilePathEnum.SteamCmd}" />
+
+                                </StackPanel>
+
+                            </controls:SettingsControl.SecondaryControl>
+
+                        </controls:SettingsControl>
+
+                        <!-- ASA Server Path -->
+                        <controls:SettingsControl
+                            Label="ASA Server:"
+                            InfoText="Note: The exe path can be relative to this app."
+                            Visibility="{Binding SelectedServerType, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static enums:ServerInstallType.Standalone}}">
+
+                            <controls:HintedTextBox
+                                Text="{Binding ServerPath, UpdateSourceTrigger=PropertyChanged}"
+                                Hint="C:\ARK Survival Ascended Dedicated Server\ShooterGame\Binaries\Win64\ArkAscendedServer.exe" />
+
+                            <controls:SettingsControl.SecondaryControl>
+                                <Button
+                                    Style="{StaticResource BrowseButton}"
+                                    CommandParameter="{x:Static enums:FilePathEnum.ASAServer}" />
+                            </controls:SettingsControl.SecondaryControl>
+
+                        </controls:SettingsControl>
+
+                        <!-- ASA Server Path (Relative)-->
+                        <controls:SettingsControl
+                            Label="ASA Server:"
+                            InfoText="Note: The path is relative to SteamCMD.exe"
+                            Visibility="{Binding SelectedServerType, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static enums:ServerInstallType.SteamCMD}}">
+
+                            <TextBlock
+                                attached:TextBlockHelper.TrimPath="{x:Static configs:Defaults.ASARelativePath}"
+                                ToolTip="{x:Static configs:Defaults.ASARelativePath}" />
+
+                        </controls:SettingsControl>
+
+                        <!-- Backup Script Path -->
+                        <controls:SettingsControl
+                            Label="Backup Script:"
+                            InfoText="The path to a 3rd party script or exe that is used to back up the server.&#x0a;&#x0a;Note: The exe path can be relative to this app.">
+
+                            <controls:HintedTextBox
+                                Text="{Binding BackupExecutablePath, UpdateSourceTrigger=PropertyChanged}"
+                                Hint="C:\Backup.bat" />
+
+                            <controls:SettingsControl.SecondaryControl>
+                                <Button
+                                    Style="{StaticResource BrowseButton}"
+                                    CommandParameter="{x:Static enums:FilePathEnum.BackupScript}" />
+                            </controls:SettingsControl.SecondaryControl>
+
+                        </controls:SettingsControl>
+
+                    </StackPanel>
+
+                </GroupBox>
+
+                <GroupBox Header="Options" Grid.IsSharedSizeScope="True">
+
+                    <StackPanel Margin="5">
+
+                        <!-- Auto Save Profiles -->
+                        <controls:SettingsControl Label="Auto Save Profiles:">
+                            <CheckBox IsChecked="{Binding AutoSaveProfile}" />
+                        </controls:SettingsControl>
+
+                        <!-- Auto Update Profiles -->
+                        <controls:SettingsControl Label="Update on First run:">
+                            <CheckBox IsChecked="{Binding UpdateOnFirstRun}" />
+                        </controls:SettingsControl>
+
+                        <!-- Recent Profiles Limit -->
+                        <controls:SettingsControl Label="Recent Profiles Limit:">
+
+                            <controls:NumericSpinner
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.RecentProfilesLimit}, Converter={converters:IntToDoubleConverter}}"
+                                Value="{Binding RecentProfilesLimit, Converter={converters:IntToDoubleConverter}, Mode=TwoWay}"/>
+
+                        </controls:SettingsControl>
+
+                    </StackPanel>
+
+                </GroupBox>
+
+            </StackPanel>
+
+            <Button
+                Grid.Row="1"
+                Margin="5"
+                Content="Save"
+                Command="{Binding SaveCommand}" />
+
+        </Grid>
+
+        <!-- Busy Indicator -->
+        <Border
+            Grid.Row="0"
+            Background="#80000000"
+            Visibility="{Binding BusyMessage, Converter={converters:StringNotNullOrEmptyToVisibilityConverter}}">
+
+            <Grid
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Text="{Binding BusyMessage}"
+                    FontSize="{DynamicResource LargeFontSize}"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    Margin="10" />
+
+                <ProgressBar
+                    Grid.Row="1"
+                    HorizontalAlignment="Stretch"
+                    Margin="10"
+                    Height="30"
+                    Value="{Binding ProgressValue}"
+                    VerticalAlignment="Center"
+                    IsIndeterminate="{Binding Path=ProgressIsIndeterminate}" />
+
+                <TextBlock
+                    Grid.Row="1"
+                    FontSize="{DynamicResource LargeFontSize}"
+                    Foreground="Black"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="{Binding ProgressValue, StringFormat='{}{0:0.##}%'}"
+                    Visibility="{Binding ProgressIsIndeterminate, Converter={converters:NegatedBooleanToVisibilityConverter}}" />
+
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</local:BaseWindow>

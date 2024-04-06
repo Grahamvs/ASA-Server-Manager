@@ -1,0 +1,349 @@
+﻿using System.IO;
+using System.IO.Compression;
+using System.Reactive.Linq;
+using System.Windows.Input;
+using ASA_Server_Manager.Common;
+using ASA_Server_Manager.Common.Commands;
+using ASA_Server_Manager.Configs;
+using ASA_Server_Manager.Enums;
+using ASA_Server_Manager.Extensions;
+using ASA_Server_Manager.Interfaces.Configs;
+using ASA_Server_Manager.Interfaces.Helpers;
+using ASA_Server_Manager.Interfaces.Services;
+
+namespace ASA_Server_Manager.Helpers;
+
+public class ServerHelper : BindableBase, IServerHelper
+{
+    #region Private Fields
+
+    private const string ASASteamServerID = "2430930";
+    private readonly IAppSettingsService _appSettingsService;
+    private readonly IDialogService _dialogService;
+    private readonly IDownloadHelper _downloadHelper;
+    private readonly IFileSystemService _fileSystemService;
+    private readonly IModService _modService;
+    private readonly IProcessHelper _processHelper;
+    private readonly IServerProfileService _serverProfileService;
+    private readonly string _workingDirectory;
+    private ProcessMonitor _asaServerMonitor;
+    private bool _backingUpServer;
+    private IDisposable _serverMonitorSubscription;
+    private ProcessMonitor _steamCmdMonitor;
+    private IDisposable _steamCmdMonitorSubscription;
+    private int _updateCount;
+    private bool _updatingServer;
+    private ActionCommand<ServerFolders> _openFolderCommand;
+
+    #endregion
+
+    #region Public Constructors
+
+    public ServerHelper(
+        IApplicationService applicationService,
+        IAppSettingsService appSettingsService,
+        IFileSystemService fileSystemService,
+        IDialogService dialogService,
+        IServerProfileService serverProfileService,
+        IModService modService,
+        IProcessHelper processHelper,
+        IDownloadHelper downloadHelper
+    )
+    {
+        _appSettingsService = appSettingsService;
+        _fileSystemService = fileSystemService;
+        _dialogService = dialogService;
+        _serverProfileService = serverProfileService;
+        _modService = modService;
+        _processHelper = processHelper;
+        _downloadHelper = downloadHelper;
+
+        _openFolderCommand = new ActionCommand<ServerFolders>(ExecuteActionCommand, CanExecuteActionCommand);
+        OpenFolderCommand = _openFolderCommand;
+
+        _appSettingsService
+            .FromPropertyChangedPattern()
+            .WherePropertyIs(nameof(IAppSettingsService.SteamCmdPath))
+            .Subscribe(_ => OnSteamCmdPathChanged());
+
+        _appSettingsService
+            .FromPropertyChangedPattern()
+            .WherePropertyIs(nameof(IAppSettingsService.ServerPath))
+            .Subscribe(_ => OnServerPathChanged());
+
+        _appSettingsService
+            .FromPropertyChangedPattern()
+            .WherePropertyIs(nameof(IAppSettingsService.BackupExecutablePath))
+            .Subscribe(_ => RaisePropertiesChanged(nameof(BackupExecutablePathIsValid), nameof(CanBackupServer)));
+
+        _appSettingsService
+            .FromPropertyChangedPattern()
+            .Sample(TimeSpan.FromMilliseconds(200))
+            .Subscribe(_ => _openFolderCommand.RaiseCanExecuteChanged());
+
+        _workingDirectory = applicationService.WorkingDirectory;
+
+        OnSteamCmdPathChanged();
+        OnServerPathChanged();
+    }
+
+    #endregion
+
+    #region Public Properties
+
+    public bool BackingUpServer
+    {
+        get => _backingUpServer;
+        private set => SetProperty(ref _backingUpServer, value, UpdateCanStatuses);
+    }
+
+    public bool BackupExecutablePathIsValid => IsFileValid(BackupExecutablePath);
+
+    public bool CanBackupServer =>
+        BackupExecutablePathIsValid
+        && !UpdatingServer
+        && !BackingUpServer
+        && !ServerRunning;
+
+    public bool CanRunServer =>
+        ServerPathIsValid
+        && !UpdatingServer
+        && !BackingUpServer;
+
+    public bool CanUpdateServer =>
+        SteamCmdPathIsValid
+        && !_steamCmdMonitor.IsRunning
+        && !UpdatingServer
+        && !BackingUpServer
+        && !ServerRunning;
+
+    public ICommand OpenFolderCommand { get; }
+
+    public bool SteamCmdPathIsValid => IsFileValid(SteamCmdPath);
+
+    public bool UpdatingServer
+    {
+        get => _updatingServer;
+        private set => SetProperty(ref _updatingServer, value, UpdateCanStatuses);
+    }
+
+    #endregion
+
+    #region Private Properties
+
+    private string BackupExecutablePath =>
+        _appSettingsService.BackupExecutablePath is { } path
+            ? _fileSystemService.GetFullPath(path, SteamCmdFolder ?? _workingDirectory)
+            : null;
+
+    private string ServerPath =>
+        _appSettingsService.ServerPath is { } path
+            ? _fileSystemService.GetFullPath(path, SteamCmdFolder ?? _workingDirectory)
+            : null;
+
+    private bool ServerPathIsValid => IsFileValid(ServerPath);
+
+    private bool ServerRunning => _asaServerMonitor?.IsRunning ?? false;
+
+    private string SteamCmdFolder =>
+        SteamCmdPath is { } path
+            ? _fileSystemService.GetDirectoryName(path)
+            : null;
+
+    private string SteamCmdPath =>
+        _appSettingsService.SteamCmdPath is { } path
+            ? _fileSystemService.GetFullPath(path, _workingDirectory)
+            : null;
+
+    #endregion
+
+    #region Public Methods
+
+    public async Task<string> DownloadSteamCmdAsync(string steamCmdFolder, IProgress<double> progress = null, CancellationToken? cancellationToken = null)
+    {
+        // Remove any previous copies of steamcmd.exe
+        var exe = "steamcmd.exe";
+        var steamCmdPath = _fileSystemService.Combine(steamCmdFolder, exe);
+
+        if (_fileSystemService.FileExists(steamCmdPath))
+        {
+            _fileSystemService.DeleteFile(steamCmdPath);
+        }
+
+        // Download steamcmd.zip
+        const string url = "https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip";
+
+        using var stream = new MemoryStream();
+        await _downloadHelper.DownloadFileToStream(url, stream, progress, cancellationToken);
+
+        stream.Position = 0;
+
+        using var zipArchive = new ZipArchive(stream);
+        zipArchive.ExtractToDirectory(steamCmdFolder);
+
+        return steamCmdPath;
+    }
+
+    public async Task RunBackupExecutable()
+    {
+        BackingUpServer = true;
+
+        await ExecuteAndWaitForProcessAsync(_appSettingsService.BackupExecutablePath).ConfigureAwait(false);
+
+        BackingUpServer = false;
+    }
+
+    public async Task RunServerAsync(IServerProfile profile)
+    {
+        if (_appSettingsService.UpdateOnFirstRun
+            && CanUpdateServer
+            && _updateCount++ == 0)
+        {
+            await UpdateServerAsync().ConfigureAwait(false);
+        }
+
+        if (!CanRunServer)
+            return;
+
+        var argument = new ServerArgumentBuilder().Build(profile, _modService.AvailableModsList);
+
+        var process = _processHelper.CreateProcess(ServerPath, argument);
+        process.Start();
+
+        await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+    }
+
+    public void StartServerMonitor() => _asaServerMonitor.Start();
+
+    public void StopServerMonitor() => _asaServerMonitor.Stop();
+
+    public async Task UpdateServerAsync()
+    {
+        if (!CanUpdateServer)
+            return;
+
+        var arguments = $"+login \"{Defaults.SteamUser}\" +app_update {ASASteamServerID} validate +quit";
+
+        UpdatingServer = true;
+
+        await ExecuteAndWaitForProcessAsync(SteamCmdPath, arguments).ConfigureAwait(false);
+
+        _updateCount++;
+
+        UpdatingServer = false;
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private bool CanExecuteActionCommand(ServerFolders folder) => GetFolder(folder) is { } dir && _fileSystemService.DirectoryExists(dir);
+
+    private ProcessMonitor CreateMonitor(string path) =>
+        !path.IsNullOrWhiteSpace()
+            ? new ProcessMonitor(_fileSystemService.GetFileNameWithoutExtension(path))
+            : null;
+
+    private void ExecuteActionCommand(ServerFolders folder)
+    {
+        if (GetFolder(folder) is not { } dir)
+        {
+            return;
+        }
+
+        if (!_fileSystemService.DirectoryExists(dir))
+        {
+            _dialogService.ShowErrorMessage($"Cannot find folder \"{dir}\"!");
+            return;
+        }
+
+        _processHelper.CreateProcess("Explorer.exe", dir).Start();
+    }
+
+    private async Task ExecuteAndWaitForProcessAsync(string exe, string arguments = null)
+    {
+        var process = _processHelper.CreateProcess(exe, arguments);
+
+        process.Start();
+
+        await Task.Run(process.WaitForExit);
+    }
+
+    private string GetFolder(ServerFolders folder)
+    {
+        return folder switch
+        {
+            ServerFolders.SteamCmd => SteamCmdFolder,
+            ServerFolders.ServerPath => ServerFolder(),
+            ServerFolders.ServerSave => _fileSystemService.GetFullPath("..\\..\\Saved", ServerFolder()),
+            ServerFolders.Profile => GetParentFolder(_serverProfileService.CurrentFilePath, _workingDirectory),
+            ServerFolders.BackupExe => GetParentFolder(BackupExecutablePath, _workingDirectory),
+            _ => null
+        };
+    }
+
+    private string GetParentFolder(string path, string relativeTo)
+    {
+        if (path.IsNullOrWhiteSpace())
+            return null;
+
+        var directoryName = _fileSystemService.GetDirectoryName(path);
+
+        return directoryName.IsNullOrWhiteSpace()
+            ? relativeTo
+            : _fileSystemService.GetFullPath(directoryName, relativeTo);
+    }
+
+    private bool IsFileValid(string file) => !file.IsNullOrWhiteSpace() && _fileSystemService.FileExists(file);
+
+    private void OnServerPathChanged()
+    {
+        DisposeField(ref _serverMonitorSubscription);
+        DisposeField(ref _asaServerMonitor);
+
+        _asaServerMonitor = CreateMonitor(ServerPath);
+
+        if (_asaServerMonitor != null)
+        {
+            _serverMonitorSubscription =
+                _asaServerMonitor
+                    .FromIsRunningChangedPattern()
+                    .Subscribe(_ => UpdateCanStatuses());
+        }
+
+        UpdateCanStatuses();
+    }
+
+    private void OnSteamCmdPathChanged()
+    {
+        DisposeField(ref _steamCmdMonitorSubscription);
+        DisposeField(ref _steamCmdMonitor);
+
+        _steamCmdMonitor = CreateMonitor(SteamCmdPath);
+
+        if (_asaServerMonitor != null)
+        {
+            _steamCmdMonitorSubscription =
+                _steamCmdMonitor
+                    .FromIsRunningChangedPattern()
+                    .Subscribe(_ => UpdateCanStatuses());
+        }
+
+        RaisePropertyChanged(nameof(SteamCmdPathIsValid));
+        UpdateCanStatuses();
+    }
+
+    private string ServerFolder() =>
+        ServerPath is { } path
+            ? _fileSystemService.GetDirectoryName(path)
+            : null;
+
+    private void UpdateCanStatuses() =>
+        RaisePropertiesChanged(
+            nameof(CanRunServer),
+            nameof(CanUpdateServer),
+            nameof(CanBackupServer)
+        );
+
+    #endregion
+}

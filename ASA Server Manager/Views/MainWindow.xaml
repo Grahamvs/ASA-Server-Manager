@@ -1,0 +1,830 @@
+﻿<views:BaseWindow
+    x:TypeArguments="viewModels1:IMainViewModel"
+    x:Class="ASA_Server_Manager.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:ASA_Server_Manager.ViewModels"
+    xmlns:controls="clr-namespace:ASA_Server_Manager.Controls"
+    xmlns:views="clr-namespace:ASA_Server_Manager.Views"
+    xmlns:viewModels1="clr-namespace:ASA_Server_Manager.Interfaces.ViewModels"
+    xmlns:converters="clr-namespace:ASA_Server_Manager.Common.Converters"
+    xmlns:configs="clr-namespace:ASA_Server_Manager.Configs"
+    xmlns:enums="clr-namespace:ASA_Server_Manager.Enums"
+    xmlns:behaviors="clr-namespace:ASA_Server_Manager.Behaviors"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:commands="clr-namespace:ASA_Server_Manager.Common.Commands"
+    mc:Ignorable="d"
+    Title="{Binding WindowTitle}"
+    Height="900"
+    Width="650"
+    WindowStartupLocation="CenterScreen"
+    d:DataContext="{d:DesignInstance viewModels:MainViewModel}">
+
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Control" Command="{Binding NewProfileCommand}" />
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding LoadProfileCommand}" />
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
+        <KeyBinding Key="S" Modifiers="Control+Shift" Command="{Binding SaveAsCommand}" />
+
+    </Window.InputBindings>
+
+    <Window.Resources>
+
+        <Style TargetType="controls:HintedTextBox" BasedOn="{StaticResource {x:Type controls:HintedTextBox}}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="IsEnabled" Value="{Binding IsBusy, Converter={converters:NegatedBoolConverter}}" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="PasswordBox" BasedOn="{StaticResource {x:Type PasswordBox}}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="IsEnabled" Value="{Binding IsBusy, Converter={converters:NegatedBoolConverter}}" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="Expander" BasedOn="{StaticResource {x:Type Expander}}">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="IsEnabled" Value="{Binding IsBusy, Converter={converters:NegatedBoolConverter}}" />
+        </Style>
+
+        <Style TargetType="GroupBox" BasedOn="{StaticResource {x:Type GroupBox}}">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="controls:SettingsControl">
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="controls:NumericSpinner">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Width" Value="70" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Step" Value="1" />
+            <Setter Property="Decimals" Value="0" />
+            <Setter Property="MinValue" Value="0" />
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" /> <!-- Menu -->
+            <RowDefinition Height="*" /> <!-- Body -->
+            <RowDefinition Height="Auto" /> <!-- Buttons -->
+        </Grid.RowDefinitions>
+
+        <!-- Menu -->
+        <Menu
+            HorizontalContentAlignment="Left"
+            Grid.Row="0"
+            IsEnabled="{Binding IsBusy, Converter={converters:NegatedBoolConverter}}">
+
+            <MenuItem Header="File" StaysOpenOnClick="True">
+
+                <MenuItem
+                    Header="New"
+                    InputGestureText="Ctrl+N"
+                    Command="{Binding NewProfileCommand}">
+
+                    <MenuItem.CommandParameter>
+                        <commands:CommandParameter />
+                    </MenuItem.CommandParameter>
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Document_White.png" />
+                    </MenuItem.Icon>
+
+                </MenuItem>
+
+                <MenuItem
+                    Header="Load"
+                    InputGestureText="Ctrl+O"
+                    Command="{Binding LoadProfileCommand}">
+
+                    <MenuItem.CommandParameter>
+                        <commands:CommandParameter />
+                    </MenuItem.CommandParameter>
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Document_White_Open.png" />
+                    </MenuItem.Icon>
+
+                </MenuItem>
+
+                <MenuItem
+                    Header="_Save"
+                    InputGestureText="Ctrl+S"
+                    Command="{Binding SaveCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Save.png" />
+                    </MenuItem.Icon>
+
+                </MenuItem>
+
+                <MenuItem
+                    Header="Save _As"
+                    InputGestureText="Ctrl+Shift+S"
+                    Command="{Binding SaveAsCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Save_As.png" />
+                    </MenuItem.Icon>
+
+                </MenuItem>
+
+                <Separator />
+
+                <MenuItem
+                    Header="Recent"
+                    ItemsSource="{Binding Path=RecentProfiles}"
+                    IsEnabled="{Binding HasRecentProfiles}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/History.png" />
+                    </MenuItem.Icon>
+
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding}" />
+                            <Setter Property="Command"
+                                    Value="{Binding DataContext.LoadProfileCommand, RelativeSource={RelativeSource AncestorType=Menu}}" />
+                            <Setter Property="CommandParameter">
+                                <Setter.Value>
+                                    <commands:CommandParameter Parameter="{Binding}" />
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+
+                </MenuItem>
+
+            </MenuItem>
+
+            <MenuItem Header="Server">
+
+                <MenuItem Header="Open Folder">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/File_Explorer.png" />
+                    </MenuItem.Icon>
+
+                    <MenuItem
+                        Header="SteamCMD"
+                        Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{x:Static enums:ServerFolders.SteamCmd}"
+                        Visibility="{Binding ShowUpdateCommand, Converter={converters:BooleanToVisibilityConverter}}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Steam.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="ASA Server"
+                        Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{x:Static enums:ServerFolders.ServerPath}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Ark.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="ASA Server Save"
+                        Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{x:Static enums:ServerFolders.ServerSave}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Folder_Opened.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="Current Profile"
+                        Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{x:Static enums:ServerFolders.Profile}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Document_White.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="Backup Executable"
+                        Command="{Binding OpenFolderCommand}"
+                        CommandParameter="{x:Static enums:ServerFolders.BackupExe}"
+                        Visibility="{Binding ShowServerBackupCommand, Converter={converters:BooleanToVisibilityConverter}}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Run_Command.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                </MenuItem>
+
+                <MenuItem
+                    Header="Update"
+                    Command="{Binding UpdateCommand}"
+                    Visibility="{Binding ShowUpdateCommand, Converter={converters:BooleanToVisibilityConverter}}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Update.png" />
+                    </MenuItem.Icon>
+
+                </MenuItem>
+
+                <MenuItem
+                    Header="Run Backup"
+                    Command="{Binding ServerBackupCommand}"
+                    Visibility="{Binding ShowServerBackupCommand, Converter={converters:BooleanToVisibilityConverter}}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Run_Command.png" />
+                    </MenuItem.Icon>
+
+                </MenuItem>
+
+            </MenuItem>
+
+            <MenuItem Header="Options">
+                <MenuItem
+                    Header="Settings"
+                    Command="{Binding ShowSettingsCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Gears_3.png" />
+                    </MenuItem.Icon>
+
+                </MenuItem>
+
+                <MenuItem
+                    Header="Available Mods"
+                    Command="{Binding ShowAvailableModsCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Tools.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </MenuItem>
+
+            <MenuItem Header="Help">
+
+                <MenuItem
+                    Header="Donate"
+                    Command="{Binding DonateCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/PayPal.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem
+                    Header="About"
+                    Command="{Binding ShowAboutWindowCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Info.png" />
+                    </MenuItem.Icon>
+
+                </MenuItem>
+
+            </MenuItem>
+
+        </Menu>
+
+        <!-- Body -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- Server Settings -->
+                <Expander
+                    Header="Server Settings"
+                    IsExpanded="True">
+
+                    <StackPanel
+                        Grid.IsSharedSizeScope="True"
+                        Margin="5">
+
+                        <!-- Map -->
+                        <controls:SettingsControl
+                            Label="Map:"
+                            HorizontalAlignment="Stretch">
+                            <ComboBox
+                                Margin="5"
+                                IsEditable="True"
+                                ItemsSource="{Binding AvailableMaps}"
+                                Text="{Binding CurrentProfile.Map}" />
+                        </controls:SettingsControl>
+
+                        <!-- Session Name -->
+                        <controls:SettingsControl
+                            Label="Session Name:"
+                            InfoText="Specifies the Server name advertised in the Game Server Browser as well in Steam Server browser." >
+                            <controls:HintedTextBox
+                                Text="{Binding CurrentProfile.SessionName, UpdateSourceTrigger=PropertyChanged}"
+                                Hint="Session123" />
+                        </controls:SettingsControl>
+
+                        <!-- Passwords -->
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="SettingsLabelWidthGroup" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Server Password -->
+                            <TextBlock
+                                x:Name="ServerPasswordLabel"
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                VerticalAlignment="Center"
+                                Text="Server Password:" />
+
+                            <PasswordBox
+                                x:Name="ServerPasswordBox"
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                VerticalAlignment="Center"
+                                PasswordChanged="OnServerPasswordChanged" />
+
+                            <Image
+                                Grid.Column="2"
+                                Grid.Row="0"
+                                Height="{Binding ElementName=ServerPasswordLabel, Path=ActualHeight}"
+                                ToolTip="If specified, players must provide this password to join the server."
+                                Source="../Resources/Icons/Info.png" />
+
+                            <!-- Admin Password -->
+                            <TextBlock
+                                Grid.Column="0"
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                Text="Admin Password:" />
+
+                            <PasswordBox
+                                x:Name="AdminPasswordBox"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                PasswordChanged="OnAdminPasswordChanged" />
+
+                            <Image
+                                Grid.Column="2"
+                                Grid.Row="1"
+                                Height="{Binding ElementName=ServerPasswordLabel, Path=ActualHeight}"
+                                ToolTip="If specified, players must provide this password (via the in-game console) to gain access to administrator commands on the server."
+                                Source="../Resources/Icons/Info.png" />
+
+                        </Grid>
+
+                        <!-- Max Players -->
+                        <controls:SettingsControl
+                            Label="Max Players:"
+                            InfoText="Sets the maximum of players for the server.">
+                            <controls:NumericSpinner
+                                MinValue="{Binding Source={x:Static configs:Defaults.MaxPlayersMin}, Converter={converters:IntToDoubleConverter}}"
+                                MaxValue="{Binding Source={x:Static configs:Defaults.MaxPlayersMax}, Converter={converters:IntToDoubleConverter}}"
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.MaxPlayers}, Converter={converters:IntToDoubleConverter}}"
+                                Value="{Binding CurrentProfile.MaxPlayers, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                        </controls:SettingsControl>
+
+                    </StackPanel>
+
+                </Expander>
+
+                <!-- Cluster & Transfer Settings -->
+                <Expander Header="Cluster &amp; Transfer Settings">
+
+                    <StackPanel
+                        Grid.IsSharedSizeScope="True"
+                        Margin="5">
+
+                        <!-- Cluster ID -->
+                        <controls:SettingsControl
+                            Label="Cluster ID:"
+                            InfoText="Specifies cluster name ID to allow Cluster Transfers.">
+                            <controls:HintedTextBox
+                                Text="{Binding CurrentProfile.ClusterID, UpdateSourceTrigger=PropertyChanged}"
+                                Hint="MyCluster" />
+                        </controls:SettingsControl>
+
+                        <!-- Cluster Dir Override -->
+                        <controls:SettingsControl
+                            Label="Cluster Dir Override:"
+                            InfoText="Specifies cross-server storage location for Cluster transfers.&#x0a;&#x0a;Note: This path can be relative to either SteamCMD.exe or the app depending on the Server Type setting.">
+
+                            <controls:HintedTextBox
+                                Text="{Binding CurrentProfile.ClusterDirOverride, UpdateSourceTrigger=PropertyChanged}"
+                                Hint="C:\MyClusters" />
+
+                            <controls:SettingsControl.SecondaryControl>
+                                <Button
+                                    Command="{Binding BrowseClusterDirOverrideCommand}"
+                                    Content="..."
+                                    Padding="15,0" />
+                            </controls:SettingsControl.SecondaryControl>
+
+                        </controls:SettingsControl>
+
+                        <!-- Max Transfer Dinos -->
+                        <controls:SettingsControl
+                            Label="Max Tribute Dinos:"
+                            InfoText="Slots for uploaded creatures">
+                            <controls:NumericSpinner
+                                MinValue="{Binding Source={x:Static configs:Defaults.MaxTributeDinosMin}, Converter={converters:IntToDoubleConverter}}"
+                                MaxValue="{Binding Source={x:Static configs:Defaults.MaxTributeDinosMax}, Converter={converters:IntToDoubleConverter}}"
+                                Value="{Binding CurrentProfile.MaxTributeDinos, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}"
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.MaxTributeDinos}, Converter={converters:IntToDoubleConverter}}" />
+                        </controls:SettingsControl>
+
+                        <!-- Max Transfer Items -->
+                        <controls:SettingsControl
+                            Label="Max Tribute Items:"
+                            InfoText="Slots for uploaded items and resources">
+                            <controls:NumericSpinner
+                                MinValue="{Binding Source={x:Static configs:Defaults.MaxTributeItemsMin}, Converter={converters:IntToDoubleConverter}}"
+                                MaxValue="{Binding Source={x:Static configs:Defaults.MaxTributeItemsMax}, Converter={converters:IntToDoubleConverter}}"
+                                Value="{Binding CurrentProfile.MaxTributeItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.MaxTributeItems}, Converter={converters:IntToDoubleConverter}}" />
+                        </controls:SettingsControl>
+
+                        <!-- No Transfer From Filtering -->
+                        <controls:SettingsControl
+                            Label="No Transfer From Filtering:"
+                            InfoText="Prevents ARK Data usage between single player and servers who do not have a cluster ID. Even with a cluster id set, it is suggested to keep this option to completely disable code path allowing it.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.NoTransferFromFiltering}" />
+                        </controls:SettingsControl>
+
+                        <!-- No Tribute Downloads -->
+                        <controls:SettingsControl
+                            Label="No Tribute Downloads:"
+                            InfoText="If checked, prevents CrossArk-data downloads inCross-ARK Data Transfer.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.NoTributeDownloads}" />
+                        </controls:SettingsControl>
+
+                        <!-- Prevent Download Items -->
+                        <controls:SettingsControl
+                            Label="Prevent Download Items:"
+                            InfoText="If checked, prevents item downloads in Cross-ARK Data Transfer.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.PreventDownloadItems}" />
+                        </controls:SettingsControl>
+
+                        <!-- Prevent Download Survivors -->
+                        <controls:SettingsControl
+                            Label="Prevent Download Survivors:"
+                            InfoText="If checked, prevents survivor downloads in Cross-ARK Data Transfer.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.PreventDownloadSurvivors}" />
+                        </controls:SettingsControl>
+
+                        <!-- Prevent Download Dinos -->
+                        <controls:SettingsControl
+                            Label="Prevent Download Dinos:"
+                            InfoText="If checked, prevents dino downloads in Cross-ARK Data Transfer.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.PreventDownloadDinos}" />
+                        </controls:SettingsControl>
+
+                    </StackPanel>
+
+                </Expander>
+
+                <!-- RCON Settings -->
+                <Expander Header="RCON Settings">
+
+                    <StackPanel
+                        Grid.IsSharedSizeScope="True"
+                        Margin="5">
+
+                        <!-- RCON Enabled -->
+                        <controls:SettingsControl
+                            Label="RCON Enabled:"
+                            InfoText="Enables RCON. Requires ServerAdminPassword to be set.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.RCONEnabled}" />
+                        </controls:SettingsControl>
+
+                        <!-- RCON Port -->
+                        <controls:SettingsControl
+                            Label="RCON Port:"
+                            InfoText="Specifies the optional TCP RCON Port.">
+                            <controls:NumericSpinner
+                                MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
+                                MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
+                                Value="{Binding CurrentProfile.RCONPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.RCONPort}, Converter={converters:IntToDoubleConverter}}" />
+                        </controls:SettingsControl>
+
+                        <!-- RCON Server Game Log Buffer -->
+                        <controls:SettingsControl
+                            Label="RCON Server Game Log Buffer:"
+                            InfoText="Determines how many lines of game logs are send over the RCON.">
+                            <controls:NumericSpinner
+                                MinValue="{Binding Source={x:Static configs:Defaults.RCONServerGameLogBufferMin}, Converter={converters:IntToDoubleConverter}}"
+                                MaxValue="{Binding Source={x:Static configs:Defaults.RCONServerGameLogBufferMax}, Converter={converters:IntToDoubleConverter}}"
+                                Value="{Binding CurrentProfile.RCONServerGameLogBuffer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.RCONServerGameLogBuffer}, Converter={converters:IntToDoubleConverter}}" />
+                        </controls:SettingsControl>
+
+                        <!-- ServerRCONOutputTribeLogs -->
+                        <controls:SettingsControl
+                            Label="ServerRCONOutputTribeLogs:"
+                            InfoText="Include tribe logs in the RCON output">
+                            <CheckBox IsChecked="{Binding CurrentProfile.ServerRCONOutputTribeLogs}" />
+                        </controls:SettingsControl>
+
+                    </StackPanel>
+
+                </Expander>
+
+                <!-- Advanced Options -->
+                <Expander
+                    Grid.IsSharedSizeScope="True"
+                    Header="Advanced Options">
+
+                    <StackPanel
+                        Grid.IsSharedSizeScope="True"
+                        Margin="5">
+
+                        <!-- Save Directory -->
+                        <controls:SettingsControl
+                            Label="Save Directory:"
+                            HorizontalAlignment="Stretch"
+                            InfoText="Allows to specify a custom directory name for server world-save.">
+                            <controls:HintedTextBox
+                                Text="{Binding CurrentProfile.SaveDirectoryName, UpdateSourceTrigger=PropertyChanged}"
+                                Hint="{x:Static configs:Defaults.SaveFolder}" />
+                        </controls:SettingsControl>
+                        
+                        <!-- Port -->
+                        <controls:SettingsControl
+                            Label="Port:"
+                            InfoText="This is the server port used to host the dedicated server on.">
+                            <controls:NumericSpinner
+                                MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
+                                MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
+                                Value="{Binding CurrentProfile.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.Port}, Converter={converters:IntToDoubleConverter}}" />
+                        </controls:SettingsControl>
+
+                        <!-- Query Port -->
+                        <controls:SettingsControl
+                            Label="Query Port:"
+                            InfoText="Specifies the UDP Steam Query Port">
+                            <controls:NumericSpinner
+                                MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
+                                MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
+                                Value="{Binding CurrentProfile.QueryPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.QueryPort}, Converter={converters:IntToDoubleConverter}}" />
+                        </controls:SettingsControl>
+
+                        <!-- Platform Max Structures Multiplier -->
+                        <controls:SettingsControl
+                            Label="Platform Max Structures Multiplier:"
+                            InfoText="Higher value increases (from a percentage scale) max number of items place-able on saddles and rafts.">
+                            <controls:NumericSpinner
+                                MinValue="{Binding Source={x:Static configs:Defaults.PlatformMaxStructuresMultiplierMin}}"
+                                MaxValue="{Binding Source={x:Static configs:Defaults.PlatformMaxStructuresMultiplierMax}}"
+                                Decimals="2"
+                                Step="0.1"
+                                Value="{Binding CurrentProfile.PlatformMaxStructuresMultiplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                DefaultValue="{Binding Source={x:Static configs:Defaults.PlatformMaxStructuresMultiplier}}" />
+                        </controls:SettingsControl>
+
+                        <!-- Allow CryoFridge On Saddle -->
+                        <controls:SettingsControl
+                            Label="Allow CryoFridge On Saddle:"
+                            InfoText="If checked, allows cryofridges to be built on platform saddles and rafts.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.AllowCryoFridgeOnSaddle}" />
+                        </controls:SettingsControl>
+
+                        <!-- Prevent Spawn Animations -->
+                        <controls:SettingsControl
+                            Label="Prevent Spawn Animations:"
+                            InfoText="If checked, player characters (re)spawn without the wake-up animation.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.PreventSpawnAnimations}" />
+                        </controls:SettingsControl>
+
+                        <!-- Random Supply Crate Points -->
+                        <controls:SettingsControl
+                            Label="Random Supply Crate Points:"
+                            InfoText="If checked, supply drops are in random locations.&#x0a;&#x0a;Note: This setting is known to cause artifacts becoming inaccessible on Ragnarok if active.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.RandomSupplyCratePoints}" />
+                        </controls:SettingsControl>
+
+                        <!-- No Wild Babies -->
+                        <controls:SettingsControl
+                            Label="No Wild Babies:"
+                            InfoText="Disables spawning of wild babies.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.NoWildBabies}" />
+                        </controls:SettingsControl>
+
+                        <!-- Use BattlEye -->
+                        <controls:SettingsControl
+                            Label="Use BattlEye:"
+                            InfoText="Run server without BattleEye.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.UseBattlEye}" />
+                        </controls:SettingsControl>
+
+                        <!-- Server Game Log -->
+                        <controls:SettingsControl
+                            Label="Server Game Log:"
+                            InfoText="Enable server admin logs (including support in the RCON)">
+                            <CheckBox IsChecked="{Binding CurrentProfile.ServerGameLog}" />
+                        </controls:SettingsControl>
+
+                        <!-- Server Game Log -->
+                        <controls:SettingsControl
+                            Label="Server Game Log Include Tribe Logs:"
+                            InfoText="Enable server admin logs (including support in the RCON)">
+                            <CheckBox IsChecked="{Binding CurrentProfile.ServerGameLogIncludeTribeLogs}" />
+                        </controls:SettingsControl>
+
+                        <!-- Additional Arguments -->
+                        <controls:SettingsControl
+                            Label="Additional Arguments:"
+                            InfoText="Any additional server options can be added here.">
+                            <TextBox
+                                VerticalAlignment="Center"
+                                Text="{Binding CurrentProfile.AdditionalArguments}" />
+                        </controls:SettingsControl>
+
+
+                    </StackPanel>
+
+                </Expander>
+
+                <!-- Mod List -->
+                <Expander
+                    IsExpanded="True"
+                    Header="Mods">
+
+                    <b:Interaction.Behaviors>
+                        <behaviors:PassMouseWheelEventToParentBehavior />
+                    </b:Interaction.Behaviors>
+
+                    <Expander.Style>
+                        <Style TargetType="Expander" BasedOn="{StaticResource {x:Type Expander}}">
+                            <Setter Property="VerticalAlignment" Value="Top" />
+                            <Style.Triggers>
+                                <Trigger Property="IsExpanded" Value="True">
+                                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Expander.Style>
+
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <controls:HintedTextBox
+                            Grid.Row="0"
+                            Text="{Binding ModFilterText, UpdateSourceTrigger=PropertyChanged}"
+                            Hint="Filter" />
+
+                        <ListView
+                            Grid.Row="1"
+                            Margin="5"
+                            MinHeight="100"
+                            ItemsSource="{Binding ModListView}"
+                            SelectedItem="{Binding SelectedMod}">
+
+                            <ListView.View>
+                                <GridView>
+
+                                    <!-- Enabled -->
+                                    <GridViewColumn Width="Auto">
+
+                                        <GridViewColumn.Header>
+                                            <GridViewColumnHeader
+                                                Content="Enabled"
+                                                Command="{Binding SortListViewCommand}"
+                                                CommandParameter="IsSelected"
+                                                HorizontalContentAlignment="Left" />
+                                        </GridViewColumn.Header>
+
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type configs:SelectableMod}">
+                                                <CheckBox Style="{StaticResource ToggleCheckBoxStyleGreen}"
+                                                          IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+
+                                    </GridViewColumn>
+
+                                    <!-- Passive -->
+                                    <GridViewColumn Width="Auto">
+
+                                        <GridViewColumn.Header>
+                                            <GridViewColumnHeader
+                                                Content="Passive"
+                                                Command="{Binding SortListViewCommand}"
+                                                CommandParameter="IsPassive"
+                                                HorizontalContentAlignment="Left"  />
+                                        </GridViewColumn.Header>
+
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type configs:SelectableMod}">
+                                                <CheckBox Style="{StaticResource ToggleCheckBoxStyleBlue}"
+                                                          IsChecked="{Binding IsPassive, Mode=TwoWay}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+
+                                    </GridViewColumn>
+
+                                    <!-- Name -->
+                                    <GridViewColumn DisplayMemberBinding="{Binding Name}">
+
+                                        <GridViewColumn.Header>
+                                            <GridViewColumnHeader
+                                                Content="Name"
+                                                Command="{Binding SortListViewCommand}"
+                                                CommandParameter="Name"
+                                                HorizontalContentAlignment="Left" />
+                                        </GridViewColumn.Header>
+
+                                    </GridViewColumn>
+
+                                    <!-- ID -->
+                                    <GridViewColumn DisplayMemberBinding="{Binding ID}" Width="Auto">
+
+                                        <GridViewColumn.Header>
+                                            <GridViewColumnHeader
+                                                Content="ID"
+                                                Command="{Binding SortListViewCommand}"
+                                                CommandParameter="ID"
+                                                HorizontalContentAlignment="Left"/>
+                                        </GridViewColumn.Header>
+
+                                    </GridViewColumn>
+
+                                    <!-- Description -->
+                                    <GridViewColumn DisplayMemberBinding="{Binding Description}">
+
+                                        <GridViewColumn.Header>
+                                            <GridViewColumnHeader
+                                                Content="Description"
+                                                Command="{Binding SortListViewCommand}"
+                                                CommandParameter="Description"
+                                                HorizontalContentAlignment="Left" />
+                                        </GridViewColumn.Header>
+
+                                    </GridViewColumn>
+
+                                </GridView>
+                            </ListView.View>
+
+                        </ListView>
+                    </Grid>
+
+
+                </Expander>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2">
+
+            <Button
+                Command="{Binding RunServerCommand}"
+                Content="Run Server" />
+
+        </StackPanel>
+
+    </Grid>
+
+</views:BaseWindow>

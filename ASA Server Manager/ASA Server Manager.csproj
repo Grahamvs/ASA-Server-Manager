@@ -1,0 +1,97 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<RootNamespace>ASA_Server_Manager</RootNamespace>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>ASM.ico</ApplicationIcon>
+		<Company>MystWalkers</Company>
+		<Version>0.1.1</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="ASM.ico" />
+		<None Remove="Resources\Icons\Ark.png" />
+		<None Remove="Resources\Icons\Arrow_Collapse_Down.png" />
+		<None Remove="Resources\Icons\Arrow_Collapse_Up.png" />
+		<None Remove="Resources\Icons\Arrow_Double_Down.png" />
+		<None Remove="Resources\Icons\Arrow_Double_Up.png" />
+		<None Remove="Resources\Icons\Checkbox_Checked.png" />
+		<None Remove="Resources\Icons\Checkbox_Indeterminate.png" />
+		<None Remove="Resources\Icons\Checkbox_Unchecked.png" />
+		<None Remove="Resources\Icons\Delete.png" />
+		<None Remove="Resources\Icons\Document_White.png" />
+		<None Remove="Resources\Icons\Document_White_Open.png" />
+		<None Remove="Resources\Icons\File_Explorer.png" />
+		<None Remove="Resources\Icons\Folder.png" />
+		<None Remove="Resources\Icons\Folder_Opened.png" />
+		<None Remove="Resources\Icons\Gear.png" />
+		<None Remove="Resources\Icons\Gears_3.png" />
+		<None Remove="Resources\Icons\Help.png" />
+		<None Remove="Resources\Icons\History.png" />
+		<None Remove="Resources\Icons\Info.png" />
+		<None Remove="Resources\Icons\PayPal.png" />
+		<None Remove="Resources\Icons\Radio_Button_Checked.png" />
+		<None Remove="Resources\Icons\Radio_Button_Unchecked.png" />
+		<None Remove="Resources\Icons\Run_Command.png" />
+		<None Remove="Resources\Icons\Save.png" />
+		<None Remove="Resources\Icons\Save_As.png" />
+		<None Remove="Resources\Icons\Steam.png" />
+		<None Remove="Resources\Icons\Toggle_Off_Gray.png" />
+		<None Remove="Resources\Icons\Toggle_Off_Red.png" />
+		<None Remove="Resources\Icons\Toggle_On_Blue.png" />
+		<None Remove="Resources\Icons\Toggle_On_Green.png" />
+		<None Remove="Resources\Icons\Tools.png" />
+		<None Remove="Resources\Icons\Update.png" />
+		<None Remove="Resources\Icons\Update_rotation.gif" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LightInject" Version="6.6.4" />
+		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="System.Reactive" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="ASM.ico" />
+		<Resource Include="Resources\Icons\Ark.png" />
+		<Resource Include="Resources\Icons\Arrow_Collapse_Down.png" />
+		<Resource Include="Resources\Icons\Arrow_Collapse_Up.png" />
+		<Resource Include="Resources\Icons\Arrow_Double_Down.png" />
+		<Resource Include="Resources\Icons\Arrow_Double_Up.png" />
+		<Resource Include="Resources\Icons\Checkbox_Checked.png" />
+		<Resource Include="Resources\Icons\Checkbox_Indeterminate.png" />
+		<Resource Include="Resources\Icons\Checkbox_Unchecked.png" />
+		<Resource Include="Resources\Icons\Delete.png" />
+		<Resource Include="Resources\Icons\Document_White.png" />
+		<Resource Include="Resources\Icons\Document_White_Open.png" />
+		<Resource Include="Resources\Icons\File_Explorer.png" />
+		<Resource Include="Resources\Icons\Folder.png" />
+		<Resource Include="Resources\Icons\Folder_Opened.png" />
+		<Resource Include="Resources\Icons\Gear.png" />
+		<Resource Include="Resources\Icons\Gears_3.png" />
+		<Resource Include="Resources\Icons\Help.png" />
+		<Resource Include="Resources\Icons\History.png" />
+		<Resource Include="Resources\Icons\Info.png" />
+		<Resource Include="Resources\Icons\PayPal.png" />
+		<Resource Include="Resources\Icons\Radio_Button_Checked.png" />
+		<Resource Include="Resources\Icons\Radio_Button_Unchecked.png" />
+		<Resource Include="Resources\Icons\Run_Command.png" />
+		<Resource Include="Resources\Icons\Save.png" />
+		<Resource Include="Resources\Icons\Save_As.png" />
+		<Resource Include="Resources\Icons\Steam.png" />
+		<Resource Include="Resources\Icons\Toggle_Off_Gray.png" />
+		<Resource Include="Resources\Icons\Toggle_Off_Red.png" />
+		<Resource Include="Resources\Icons\Toggle_On_Blue.png" />
+		<Resource Include="Resources\Icons\Toggle_On_Green.png" />
+		<Resource Include="Resources\Icons\Tools.png" />
+		<Resource Include="Resources\Icons\Update.png" />
+		<Resource Include="Resources\Icons\Update_rotation.gif" />
+	</ItemGroup>
+
+</Project>
