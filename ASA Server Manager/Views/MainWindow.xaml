@@ -56,7 +56,7 @@
         <Style TargetType="controls:SettingsControl">
             <Setter Property="MinWidth" Value="100" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
 
         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
@@ -345,7 +345,7 @@
                         <!-- Session Name -->
                         <controls:SettingsControl
                             Label="Session Name:"
-                            InfoText="Specifies the Server name advertised in the Game Server Browser as well in Steam Server browser." >
+                            InfoText="Specifies the Server name advertised in the Game Server Browser as well in Steam Server browser.">
                             <controls:HintedTextBox
                                 Text="{Binding CurrentProfile.SessionName, UpdateSourceTrigger=PropertyChanged}"
                                 Hint="Session123" />
@@ -585,7 +585,7 @@
                                 Text="{Binding CurrentProfile.SaveDirectoryName, UpdateSourceTrigger=PropertyChanged}"
                                 Hint="{x:Static configs:Defaults.SaveFolder}" />
                         </controls:SettingsControl>
-                        
+
                         <!-- Port -->
                         <controls:SettingsControl
                             Label="Port:"
@@ -754,7 +754,7 @@
                                                 Content="Passive"
                                                 Command="{Binding SortListViewCommand}"
                                                 CommandParameter="IsPassive"
-                                                HorizontalContentAlignment="Left"  />
+                                                HorizontalContentAlignment="Left" />
                                         </GridViewColumn.Header>
 
                                         <GridViewColumn.CellTemplate>
@@ -787,7 +787,7 @@
                                                 Content="ID"
                                                 Command="{Binding SortListViewCommand}"
                                                 CommandParameter="ID"
-                                                HorizontalContentAlignment="Left"/>
+                                                HorizontalContentAlignment="Left" />
                                         </GridViewColumn.Header>
 
                                     </GridViewColumn>

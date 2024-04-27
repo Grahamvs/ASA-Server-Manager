@@ -26,13 +26,13 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     private readonly IApplicationService _applicationService;
     private readonly IAppSettingsService _appSettingsService;
     private readonly string _appTitle = "ASA Server Manager";
-    private readonly IServerHelper _serverHelper;
     private readonly IDialogService _dialogService;
-    private readonly IProcessHelper _processHelper;
     private readonly IFileSystemService _fileSystemService;
     private readonly TokenHelper _isBusyHelper;
     private readonly IMapService _mapService;
     private readonly IModService _modService;
+    private readonly IProcessHelper _processHelper;
+    private readonly IServerHelper _serverHelper;
     private readonly IServerProfileService _serverProfileService;
     private readonly IViewService _viewService;
     private IDisposable _commandToken;
@@ -136,24 +136,9 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         }
     }
 
-    private void ExecuteDonateCommand()
-    {
-        var message = "Enjoying the software? It's on the house! If you want to contribute to my caffeine addiction by buying me a coffee, that'd be super cool. But if not, that's fine too!";
-
-        var result = _dialogService.ShowMessage(message, "Donations welcomed", MessageBoxButton.YesNo);
-
-        if (result != MessageBoxResult.Yes)
-            return;
-
-        var info = new ProcessStartInfo("https://www.paypal.me/slayerice09") { UseShellExecute = true };
-        _processHelper.CreateProcess(info).Start();
-    }
-
     #endregion
 
     #region Public Properties
-
-    public override bool OnWindowClosing() => ForceSaveProfile() is not null;
 
     public IReadOnlyList<string> AvailableMaps => _mapService.AvailableIDs;
 
@@ -165,9 +150,9 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public bool CanUpdateServer => _serverHelper.CanUpdateServer;
 
-    public bool ProfileIsValid => CurrentProfile?.IsValid ?? false;
-
     public IServerProfile CurrentProfile => _serverProfileService.CurrentProfile;
+
+    public ICommand DonateCommand { get; }
 
     public bool HasRecentProfiles => RecentProfiles.Any();
 
@@ -186,6 +171,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     public ICommand NewProfileCommand { get; }
 
     public ICommand OpenFolderCommand => _serverHelper.OpenFolderCommand;
+
+    public bool ProfileIsValid => CurrentProfile?.IsValid ?? false;
 
     public IEnumerable<string> RecentProfiles => _appSettingsService.RecentProfiles;
 
@@ -224,7 +211,11 @@ public class MainViewModel : WindowViewModel, IMainViewModel
             ? _appTitle
             : $"{_appTitle}: {_serverProfileService.CurrentFileName}{(CurrentProfile.HasChanges ? "*" : string.Empty)}";
 
-    public ICommand DonateCommand { get; }
+    #endregion
+
+    #region Public Methods
+
+    public override bool OnWindowClosing() => ForceSaveProfile() is not null;
 
     #endregion
 
@@ -288,36 +279,6 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     #region Private Methods
 
-    private bool? ForceSaveProfile()
-    {
-        var filePath = _serverProfileService.CurrentFilePath;
-        var hasChanges = _serverProfileService.CurrentProfile.HasChanges;
-
-        if (!_serverProfileService.IsFileLoaded || !hasChanges || filePath.IsNullOrWhiteSpace())
-            return false;
-
-        if (_appSettingsService.AutoSaveProfile)
-        {
-            SaveProfile(filePath);
-            return true;
-        }
-
-        var message = "You have unsaved changes.\r\nDo you wish to save them before proceeding?";
-
-        switch (_dialogService.ShowMessage(message, buttons: MessageBoxButton.YesNoCancel))
-        {
-            case MessageBoxResult.Yes:
-                SaveProfile(filePath);
-                return true;
-
-            case MessageBoxResult.No:
-                return false;
-
-            default:
-                return null;
-        }
-    }
-
     private bool CanExecuteRunServerBackupCommand() => CanRunServerBackup;
 
     private bool CanExecuteRunServerCommand() => ProfileIsValid && CanRunServer;
@@ -335,6 +296,19 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         {
             CurrentProfile.ClusterDirOverride = folder;
         }
+    }
+
+    private void ExecuteDonateCommand()
+    {
+        var message = "Enjoying the software? It's on the house! If you want to contribute to my caffeine addiction by buying me a coffee, that'd be super cool. But if not, that's fine too!";
+
+        var result = _dialogService.ShowMessage(message, "Donations welcomed", MessageBoxButton.YesNo);
+
+        if (result != MessageBoxResult.Yes)
+            return;
+
+        var info = new ProcessStartInfo("https://www.paypal.me/slayerice09") { UseShellExecute = true };
+        _processHelper.CreateProcess(info).Start();
     }
 
     private void ExecuteLoadProfileCommand(CommandParameter parameter)
@@ -431,6 +405,36 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         //using var token = _isBusyHelper.GetToken();
 
         await _serverHelper.UpdateServerAsync().ConfigureAwait(false);
+    }
+
+    private bool? ForceSaveProfile()
+    {
+        var filePath = _serverProfileService.CurrentFilePath;
+        var hasChanges = _serverProfileService.CurrentProfile.HasChanges;
+
+        if (!_serverProfileService.IsFileLoaded || !hasChanges || filePath.IsNullOrWhiteSpace())
+            return false;
+
+        if (_appSettingsService.AutoSaveProfile)
+        {
+            SaveProfile(filePath);
+            return true;
+        }
+
+        var message = "You have unsaved changes.\r\nDo you wish to save them before proceeding?";
+
+        switch (_dialogService.ShowMessage(message, buttons: MessageBoxButton.YesNoCancel))
+        {
+            case MessageBoxResult.Yes:
+                SaveProfile(filePath);
+                return true;
+
+            case MessageBoxResult.No:
+                return false;
+
+            default:
+                return null;
+        }
     }
 
     private void OnArkServerHelper_PropertyChanged(PropertyChangedEventArgs eventArgs)
