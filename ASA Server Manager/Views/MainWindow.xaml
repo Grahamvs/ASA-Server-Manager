@@ -32,6 +32,8 @@
 
     <Window.Resources>
 
+        <commands:CommandParameter x:Key="CommandParameter" x:Shared="False" />
+
         <Style TargetType="controls:HintedTextBox" BasedOn="{StaticResource {x:Type controls:HintedTextBox}}">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="IsEnabled" Value="{Binding IsBusy, Converter={converters:NegatedBoolConverter}}" />
@@ -821,7 +823,8 @@
 
             <Button
                 Command="{Binding RunServerCommand}"
-                Content="Run Server" />
+                Content="Run Server"
+                CommandParameter="{StaticResource CommandParameter}" />
 
         </StackPanel>
 
