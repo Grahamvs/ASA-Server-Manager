@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASA Server Manager Tests", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C86BCBF8-B972-41D3-B507-214C02076D8F}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\main-ci.yml = .github\workflows\main-ci.yml
 		README.md = README.md
 	EndProjectSection
 EndProject

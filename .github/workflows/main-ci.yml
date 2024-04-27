@@ -1,0 +1,125 @@
+name: Main CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    # Increment application's version
+    - name: Increment version (patch only)
+      id: version
+      run: |
+        $latestRelease = Invoke-RestMethod -Uri https://api.github.com/repos/Grahamvs/ASA-Server-Manager/releases/latest
+        $latestVersion = [Version]$latestRelease.tag_name.TrimStart('v')
+        echo "::set-output name=LASTVERSION::$latestVersion"
+        echo "Previous release version: $latestVersion"
+        $csprojPath = './ASA Server Manager/ASA Server Manager.csproj'
+        $csprojContent = Get-Content $csprojPath -Raw
+        $versionRegex = '<Version>(.*?)</Version>'
+        $currentVersion = [Version]($csprojContent | Select-String -Pattern $versionRegex).Matches.Groups[1].Value
+        if ($currentVersion.Major -eq $latestVersion.Major -and $currentVersion.Minor -eq $latestVersion.Minor) {
+            $newVersion = New-Object -TypeName 'Version' -ArgumentList $currentVersion.Major, $currentVersion.Minor, ($latestVersion.Build + 1)
+        } else {
+            $newVersion = New-Object -TypeName 'Version' -ArgumentList $currentVersion.Major, $currentVersion.Minor, 0
+        }
+        echo "New version: $newVersion"
+        $newCsprojContent = $csprojContent -replace $versionRegex, "<Version>$newVersion</Version>"
+        Set-Content -Path $csprojPath -Value $newCsprojContent
+        echo "::set-output name=VERSION::$newVersion"
+      shell: pwsh
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    # Restore NuGet packages
+    - name: Install dependencies
+      run: dotnet restore
+
+    # Build all projects
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    # Execute all unit tests in the solution
+    - name: Run Tests
+      run: dotnet test --no-restore --verbosity normal
+
+    # Run the "Framework" publish profile
+    - name: Publish Framework profile
+      run: dotnet publish "./ASA Server Manager/ASA Server Manager.csproj" --configuration Release --runtime win-x86 -p:PublishProfile=Framework
+
+    # Run the "SelfContained" publish profile
+    - name: Publish SelfContained profile
+      run: dotnet publish "./ASA Server Manager/ASA Server Manager.csproj" --configuration Release --runtime win-x86 -p:PublishProfile=SelfContained
+
+    # Create Publish directory
+    - name: Create Publish directory
+      run: New-Item -Path "./bin/Publish" -ItemType Directory -Force
+
+    # Zip up files created by "Framework" profile
+    - name: Zip Framework profile files
+      run: Compress-Archive -Path "./ASA Server Manager/bin/Publish/Framework/*" -DestinationPath "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (Framework).zip"
+
+    # Zip up files created by "SelfContained" profile
+    - name: Zip SelfContained profile files
+      run: Compress-Archive -Path "./ASA Server Manager/bin/Publish/SelfContained/*" -DestinationPath "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (SelfContained).zip"
+
+    # # Generate changelog from commit messages
+    # - name: Generate changelog
+    #   id: github_release
+    #   uses: mikepenz/release-changelog-builder-action@v4
+    #   env:
+    #       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    # Create Release
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        tag_name: v${{ steps.version.outputs.VERSION }}
+        release_name: v${{ steps.version.outputs.VERSION }}
+        # body: ${{ steps.changelog.outputs.changelog }}
+        body: Bug fixes
+        draft: false
+        prerelease: false
+
+    # Add "Framework" zip files to Release
+    - name: Upload Framework Release Asset
+      id: upload-framework-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (Framework).zip"
+        asset_name: "ASA Server Manager v${{ steps.version.outputs.VERSION }} (Framework).zip"
+        asset_content_type: application/zip
+
+    # Add "SelfContained" zip files to Release
+    - name: Upload SelfContained Release Asset
+      id: upload-selfcontained-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (SelfContained).zip"
+        asset_name: "ASA Server Manager v${{ steps.version.outputs.VERSION }} (SelfContained).zip"
+        asset_content_type: application/zip

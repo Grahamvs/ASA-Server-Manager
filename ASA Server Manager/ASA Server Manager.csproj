@@ -3,13 +3,14 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
+		<RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
 		<RootNamespace>ASA_Server_Manager</RootNamespace>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
 		<ApplicationIcon>ASM.ico</ApplicationIcon>
 		<Company>MystWalkers</Company>
-		<Version>0.1.1</Version>
+		<Version>0.1.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
