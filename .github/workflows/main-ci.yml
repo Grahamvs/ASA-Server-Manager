@@ -3,6 +3,11 @@ name: Main CI/CD
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - 'readme.md'
+      - '*.yml'
+      - '.gitignore'
+      - '.editorconfig'
   workflow_dispatch:
 
 jobs:
@@ -73,18 +78,19 @@ jobs:
 
     # Zip up files created by "Framework" profile
     - name: Zip Framework profile files
-      run: Compress-Archive -Path "./ASA Server Manager/bin/Publish/Framework/*" -DestinationPath "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (Framework).zip"
+      run: |
+        Get-ChildItem "./ASA Server Manager/bin/Publish/Framework/*" -Recurse |
+        Where-Object { !$_.FullName.EndsWith('.pdb') } |
+        Compress-Archive -DestinationPath "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (Framework).zip"
+      shell: pwsh
 
     # Zip up files created by "SelfContained" profile
     - name: Zip SelfContained profile files
-      run: Compress-Archive -Path "./ASA Server Manager/bin/Publish/SelfContained/*" -DestinationPath "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (SelfContained).zip"
-
-    # # Generate changelog from commit messages
-    # - name: Generate changelog
-    #   id: github_release
-    #   uses: mikepenz/release-changelog-builder-action@v4
-    #   env:
-    #       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        Get-ChildItem "./ASA Server Manager/bin/Publish/SelfContained/*" -Recurse |
+        Where-Object { !$_.FullName.EndsWith('.pdb') } |
+        Compress-Archive -DestinationPath "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (SelfContained).zip"
+      shell: pwsh
 
     # Create Release
     - name: Create Release
@@ -95,7 +101,6 @@ jobs:
       with:
         tag_name: v${{ steps.version.outputs.VERSION }}
         release_name: v${{ steps.version.outputs.VERSION }}
-        # body: ${{ steps.changelog.outputs.changelog }}
         body: Bug fixes
         draft: false
         prerelease: false
@@ -123,3 +128,4 @@ jobs:
         asset_path: "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (SelfContained).zip"
         asset_name: "ASA Server Manager v${{ steps.version.outputs.VERSION }} (SelfContained).zip"
         asset_content_type: application/zip
+
