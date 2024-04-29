@@ -48,6 +48,13 @@
 
                 <TextBlock Text="Created by: SlayerIce09" />
 
+                <TextBlock Margin="0,10">
+                    <Run Text="Project Source Code:" />
+                    <Hyperlink NavigateUri="https://github.com/Grahamvs/ASA-Server-Manager/" RequestNavigate="Hyperlink_RequestNavigate">
+                        GitHub
+                    </Hyperlink>
+                </TextBlock>
+
                 <TextBlock>
                     <Run Text="Icons by:" />
                     <Hyperlink NavigateUri="https://icons8.com/" RequestNavigate="Hyperlink_RequestNavigate">

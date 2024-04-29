@@ -307,6 +307,24 @@
                 </MenuItem>
 
                 <MenuItem
+                    Header="Check for Updates"
+                    Command="{Binding CheckForUpdatesCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Update.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem
+                    Header="FAQ"
+                    Command="{Binding OpenFAQCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Help.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem
                     Header="About"
                     Command="{Binding ShowAboutWindowCommand}">
 

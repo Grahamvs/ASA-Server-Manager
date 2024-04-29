@@ -97,6 +97,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         BrowseClusterDirOverrideCommand = CreateBasedCommand(new ActionCommand(ExecuteBrowseClusterDirOverrideCommand));
 
         DonateCommand = new ActionCommand(ExecuteDonateCommand);
+        CheckForUpdatesCommand = new ActionCommand(ExecuteCheckForUpdatesCommand);
+        OpenFAQCommand = new ActionCommand(ExecuteOpenFAQCommand);
 
         var serverBackupCommand = new ActionCommand(async () => await ExecuteServerBackupCommandAsync().ConfigureAwait(false), CanExecuteRunServerBackupCommand)
             .ObservesProperty(() => CanRunServerBackup);
@@ -149,6 +151,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     public bool CanRunServerBackup => _serverHelper.CanBackupServer;
 
     public bool CanUpdateServer => _serverHelper.CanUpdateServer;
+
+    public ICommand CheckForUpdatesCommand { get; }
 
     public IServerProfile CurrentProfile => _serverProfileService.CurrentProfile;
 
@@ -210,6 +214,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         _serverProfileService.CurrentFileName.IsNullOrWhiteSpace()
             ? _appTitle
             : $"{_appTitle}: {_serverProfileService.CurrentFileName}{(CurrentProfile.HasChanges ? "*" : string.Empty)}";
+
+    public ICommand OpenFAQCommand { get; }
 
     #endregion
 
@@ -298,6 +304,10 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         }
     }
 
+    private void ExecuteOpenFAQCommand() => OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/README.md#FAQ");
+
+    private void ExecuteCheckForUpdatesCommand() => OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/releases");
+
     private void ExecuteDonateCommand()
     {
         var message = "Enjoying the software? It's on the house! If you want to contribute to my caffeine addiction by buying me a coffee, that'd be super cool. But if not, that's fine too!";
@@ -307,8 +317,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         if (result != MessageBoxResult.Yes)
             return;
 
-        var info = new ProcessStartInfo("https://www.paypal.me/slayerice09") { UseShellExecute = true };
-        _processHelper.CreateProcess(info).Start();
+        OpenWeblink("https://www.paypal.me/slayerice09");
     }
 
     private void ExecuteLoadProfileCommand(CommandParameter parameter)
@@ -511,6 +520,12 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         //// Local Functions \\\\
 
         bool CheckValue(string value) => (value ?? string.Empty).Contains(ModFilterText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void OpenWeblink(string url)
+    {
+        var info = new ProcessStartInfo(url) { UseShellExecute = true };
+        _processHelper.CreateProcess(info).Start();
     }
 
     private void RefreshModList()
