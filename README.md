@@ -1,5 +1,9 @@
 # ASA Server Manager
 
+<p align="center">
+  <img src="https://github.com/Grahamvs/ASA-Server-Manager/blob/main/ScreenShots/Main%20-%20Default.png" alt="ASA Server Manager">
+</p>
+
 
 ## Overview
 The ASA Server Manager is a Windows-based tool designed to facilitate the management of Ark Survival Ascended servers. It allows users to create and load profiles with server session settings, enabling the operation of multiple sessions from a single ARK Survival Ascended Dedicated Server installation. This feature is especially beneficial for running servers in cluster mode as they can utilize the same .ini files.
@@ -37,7 +41,7 @@ The tool is still under development, so it may contain bugs or lack certain opti
 ### How do I install the Ark Survival Ascended dedicated server?
 When you launch the tool for the first time, an options window will appear. Choose "SteamCMD" as the server type and click "Install". A warning will appear, notifying you that proceeding will initiate the SteamCMD installation to download the server, which requires at least 11GB of free space (this requirement may change in the future). If you agree to proceed, you will be asked to select the installation location for SteamCMD. Choose your preferred directory and wait for the tool to automatically install SteamCMD and the ASA server. Once the installation is complete, the tool will automatically populate the necessary server paths. After verifying the settings, click "Save" to store the settings and close the window.
 
-## What if I already have an existing SteamCMD version of the Ark Survival Ascended server installed?
+### What if I already have an existing SteamCMD version of the Ark Survival Ascended server installed?
 If you already have the server installed using an existing SteamCMD installation, ensure you have the server type set to "SteamCMD", then use the browse button (the "..." button next to the "Install" button) and navigate to the server's directory. Once you've selected the SteamCMD executable, click on the "open" button.
 
 ### What if I don't want to use SteamCMD?
@@ -54,13 +58,18 @@ Notes:
     
 ### What is a profile?
 A profile is a set of server settings that can be saved and loaded at any time. This is useful for running multiple servers off a single installation.
-See "Can I run multiple servers at once?" for more information.
+See "[Can I run multiple servers at once?](#can-i-run-multiple-servers-at-once)" for more information.
 
 ### Can I run multiple servers at once?
 Yes, you can run multiple servers at once. To do this, create a profile for each server you want to run, then load the profile and start the server. Once the server is running, you can load a different profile and start another server. For best results, ensure you have 12 - 16GB of RAM avaialble per server, and that each profile has a unique Port and QueryPort assigned to it.
 
 ### Can I run multiple cluster servers at once?
-Yes, but you will need to set the ClusterID for each profile. All servers in the cluster should have the same ClusterID. See "Can I run multiple servers at once?" for more information, as well as the Cluster section in the [Ark Server Configuration Wiki](https://ark.wiki.gg/wiki/Server_configuration#More_About_Cluster_Files_and_Running_Multiple_Servers) for more information on cluster servers.
+Yes, but you will need to set the ClusterID for each profile. All servers in the cluster should have the same ClusterID. See "[Can I run multiple servers at once?](#can-i-run-multiple-servers-at-once)" for more information, as well as the Cluster section in the [Ark Server Configuration Wiki](https://ark.wiki.gg/wiki/Server_configuration#More_About_Cluster_Files_and_Running_Multiple_Servers) for more information on cluster servers.
+
+### Are passwords stored in plain text?
+No, passwords are stored in a custom encrypted format, and are never shown unencrypted.
+
+This might change in the future to a more secure method, however, the current method is secure enough for now as this is just for a game server.
 
 ### What are mods, and how do I add them?
 Mods are user-created content that can enhance the gaming experience. The ASA Server Manager provides a user-created list of available mods that all profiles share. Each profile can be configured to enable any or all of the mods for the server.
@@ -75,6 +84,18 @@ To use a mod from the Available Mods list, go to the Mods group, find the desire
 ### What is the difference between "Enabled" and "Passive"?
 - Enabled: The mod will be loaded by the server and will be active.
 - Passive: The mod's assets will be loaded by the server but the rest of the mod will not be active. (Note: Currently, only "Love Ascended" and "Winter Wonderland" utilize this state.)
+
+### Can I filter the mod list?
+Yes, you can filter the mod list by typing in the filter box. The list will automatically update to show only the mods that match the filter. The filter is not case-sensitive, and checks the mod's name, ID and description.
+
+### Can I filter the mod list to only show disabled, enabled, or passive mods?
+Yes. You can use the words "enabled", "disabled", or "passive" in the filter box to show only mods that match the filter.
+
+### When I set a mode to "Passive", why does it also show as "Enabled" in the list?
+In order to use a mod in "Passive" mode, it must also be enabled. This is because the server needs to load the mod's assets in order to use it in "Passive" mode.
+
+### How do I update the mods to the latest version?
+To update the mods, simply run the server with the mods enabled. The server will automatically check for updates and download them if necessary.
 
 ### I renamed the executable, and now the application has lost my settings. How do I fix this?
 This issue occurs because the tool searches for its config files based on the executable's name. To resolve this, either close the tool and rename the executable back to its original name, or rename the ".config" and ".mods" file to match.
@@ -116,9 +137,9 @@ The mods you choose to use are entirely up to you, however, I personally recomme
 - Big Quality of Life changes:
   - QoL+ (ID: 939228) see [link](https://www.curseforge.com/ark-survival-ascended/mods/qol).
   - Super Cryo Storage (ID: 933099) see [link](https://www.curseforge.com/ark-survival-ascended/mods/super-cryo-storage).
-  Der Dino Finder (ID: 935408) see [link](https://www.curseforge.com/ark-survival-ascended/mods/der-dino-finder).      
-  Awesome Spyglass! (ID: 947033) see [link](https://www.curseforge.com/ark-survival-ascended/mods/awesomespyglass).
-  Awesome Teleporters! (ID: 950914) see [link](https://www.curseforge.com/ark-survival-ascended/mods/awesometeleporters).
+  - Der Dino Finder (ID: 935408) see [link](https://www.curseforge.com/ark-survival-ascended/mods/der-dino-finder).      
+  - Awesome Spyglass! (ID: 947033) see [link](https://www.curseforge.com/ark-survival-ascended/mods/awesomespyglass).
+  - Awesome Teleporters! (ID: 950914) see [link](https://www.curseforge.com/ark-survival-ascended/mods/awesometeleporters).
  
 
 ## Contributing
@@ -130,7 +151,7 @@ This software is a work in progress, so use it at your own risk. The developer(s
 
 The developer(s) are no way affiliated with Steam, SteamCMD, the game's developers or publishers.
 
-The developer(s) are also not repsonsible in the event you miss important events (such as the birth of a child, a / your wedding, spouse's birthday, etc), or having your spouse leave you due to you playing too much ASA. Please remember to take frequent breaks and spend time with your pets and loved ones.
+The developer(s) are also not repsonsible in the event you miss important events (such as the birth of your child, your wedding, spouse's birthday, etc), or having your spouse leave you due to you playing too much ASA. Please remember to take frequent breaks and don't forget to feed and spend time with your pets and loved ones.
 
 
 ## License
