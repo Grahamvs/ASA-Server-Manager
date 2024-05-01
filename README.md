@@ -123,7 +123,8 @@ Future versions will include an automatic notification to alert users of new ver
 
 ### Which mods do you recommend?
 The mods you choose to use are entirely up to you, however, I personally recommended the following:
-- Server tools:
+
+- Server tools (Must haves):
   - Admin Panel (ID: 929868) see [link](https://www.curseforge.com/ark-survival-ascended/mods/admin-panel).
   - Lily's Tweaker (ID: 939688) see [link](https://www.curseforge.com/ark-survival-ascended/mods/lilys-tweaker).
 
@@ -135,12 +136,21 @@ The mods you choose to use are entirely up to you, however, I personally recomme
     - Utilities Plus (ID: 928621) see [link](https://www.curseforge.com/ark-survival-ascended/mods/utilities-plus).
 
 - Big Quality of Life changes:
-  - QoL+ (ID: 939228) see [link](https://www.curseforge.com/ark-survival-ascended/mods/qol).
-  - Super Cryo Storage (ID: 933099) see [link](https://www.curseforge.com/ark-survival-ascended/mods/super-cryo-storage).
-  - Der Dino Finder (ID: 935408) see [link](https://www.curseforge.com/ark-survival-ascended/mods/der-dino-finder).      
-  - Awesome Spyglass! (ID: 947033) see [link](https://www.curseforge.com/ark-survival-ascended/mods/awesomespyglass).
-  - Awesome Teleporters! (ID: 950914) see [link](https://www.curseforge.com/ark-survival-ascended/mods/awesometeleporters).
+    - Cybers Structures QoL+ (ID: 940975) see [link](https://www.curseforge.com/ark-survival-ascended/mods/cybers-structures).
+    - Super Cryo Storage (ID: 933099) see [link](https://www.curseforge.com/ark-survival-ascended/mods/super-cryo-storage).
+    - Der Dino Finder (ID: 935408) see [link](https://www.curseforge.com/ark-survival-ascended/mods/der-dino-finder).      
+    - Awesome Spyglass! (ID: 947033) see [link](https://www.curseforge.com/ark-survival-ascended/mods/awesomespyglass).
+    - Awesome Teleporters! (ID: 950914) see [link](https://www.curseforge.com/ark-survival-ascended/mods/awesometeleporters).
  
+- Enhanced Cryopod mods (only use one):
+    - Super Cryo Storage (ID: 933099) see [link](https://www.curseforge.com/ark-survival-ascended/mods/super-cryo-storage).
+    - Dino Depot (ID: 942024) see [link](https://www.curseforge.com/ark-survival-ascended/mods/dino-depot).
+  
+ Super Cryo Storage and Dino Depot are very similar. The key differnces are as follows:
+- Dino Depot: Has more configurable settings, but most settings a set in the .ini file.
+- Super Cryo Storage: Has a few more features, and all settings are set in the mod's UI.
+ 
+Note: It is strongly recommended to only use one cryopod mod at a time! Also, when uninstalling a cryopod mod, ensure all dinos are transfered into vanilla cryopods prior to uninstalling the mod, as the dinos will be lost if they are not transfered.
 
 ## Contributing
 Contributions to the project are welcome. You can submit pull requests or bug reports on the project's [GitHub](https://github.com/Grahamvs/ASA-Server-Manager) page. If you're feeling generous, you can also support the project by buying me a coffee via [PayPal.me](https://paypal.me/grahamvs87). There is also a "Donte" menu item under the tool's "Help" menu that will open the PayPal.me link.
