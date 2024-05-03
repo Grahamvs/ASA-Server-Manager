@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using ASA_Server_Manager.Common;
 using ASA_Server_Manager.Configs;
-using ASA_Server_Manager.Enums;
 using ASA_Server_Manager.Extensions;
 using ASA_Server_Manager.Interfaces.Configs;
 using ASA_Server_Manager.Interfaces.Serialization;
@@ -82,7 +81,7 @@ public class ServerProfileService : BindableBase, IServerProfileService
     public ServerProfile CreateDefaultProfile() =>
         new()
         {
-            Map = _mapService.OfficialIDs[0],
+            MapID = _mapService.OfficialMaps[0].ID,
             Port = Defaults.Port,
             AllowCryoFridgeOnSaddle = false,
             PreventSpawnAnimations = false,

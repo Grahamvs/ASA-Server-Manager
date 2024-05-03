@@ -15,7 +15,7 @@ namespace ASA_Server_Manager_Tests.Services
         #region Private Fields
 
         private readonly string _profilePath = "testProfilePath";
-        private List<string> _officialMaps;
+        private List<MapDetails> _officialMaps;
         private ServerProfileService _sut;
 
         #endregion
@@ -24,10 +24,10 @@ namespace ASA_Server_Manager_Tests.Services
 
         protected override void OnSetup()
         {
-            _officialMaps = [.. new[] { "Map1" }];
+            _officialMaps = [.. new[] { new MapDetails { ID = "Map1" } }];
 
             GetMock<IMapService>()
-                .Setup(service => service.OfficialIDs)
+                .Setup(service => service.OfficialMaps)
                 .Returns(_officialMaps);
 
             _sut = CreateInstance<ServerProfileService>();
@@ -41,7 +41,7 @@ namespace ASA_Server_Manager_Tests.Services
         public void LoadLastProfile_Should_Load_The_Last_Used_Profile_If_Its_Not_Null()
         {
             // Arrange
-            var defaultProfile = new ServerProfile { Map = "DefaultMap", Port = 1234 };
+            var defaultProfile = new ServerProfile { MapID = "DefaultMap", Port = 1234 };
             var appSettingsService = GetMock<IAppSettingsService>();
             var fileSystemServiceMock = GetMock<IFileSystemService>();
             var serializationServiceMock = GetMock<ISerializer>();
@@ -65,7 +65,7 @@ namespace ASA_Server_Manager_Tests.Services
         public void LoadProfile_Should_Load_From_File()
         {
             // Arrange
-            var profile = new ServerProfile { Map = "TestMap", Port = 1234 };
+            var profile = new ServerProfile { MapID = "TestMap", Port = 1234 };
             var fileSystemServiceMock = GetMock<IFileSystemService>();
             var serializationServiceMock = GetMock<ISerializer>();
 
@@ -93,7 +93,7 @@ namespace ASA_Server_Manager_Tests.Services
 
             var profile = (ServerProfile)_sut.CurrentProfile;
 
-            profile.Map = "NewMap";
+            profile.MapID = "NewMap";
             profile.Port = 5678;
             profile.ServerPassword = "NewPassword";
             profile.AdminPassword = "NewAdminPassword";
@@ -120,7 +120,7 @@ namespace ASA_Server_Manager_Tests.Services
             var serializationServiceMock = GetMock<ISerializer>();
             var profile = (ServerProfile)_sut.CurrentProfile;
 
-            profile.Map = "NewMap";
+            profile.MapID = "NewMap";
             profile.Port = 5678;
             profile.ServerPassword = "NewPassword";
             profile.AdminPassword = "NewAdminPassword";

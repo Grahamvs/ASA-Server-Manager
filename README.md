@@ -101,9 +101,7 @@ To update the mods, simply run the server with the mods enabled. The server will
 This issue occurs because the tool searches for its config files based on the executable's name. To resolve this, either close the tool and rename the executable back to its original name, or rename the ".config" and ".mods" file to match.
 
 ### There's a new / custom map I want to use, but it's not showing in the list, how do I add it?
-At present, you can either type the map name into the combobox, or manually add it to the "AvailableMaps.txt" file and restart the tool.
-
-Note: In the future, a feature will be added to allow users to add custom maps to the list from within the tool. Until then, it is recommended to manually add the map to the "AvailableMaps.txt" file, as this will make the map available to all profiles.
+On the main window, click the "Options" menu and select the "Custom Maps" option. In the window that appears, you can add the map name to the list. An ID is required. Once you've finished, click the "Save" button to save the changes and close the window.
 
 ### Why can't I update the server?
 Firstly, ensure there is no instances of the server running. Secondly, check the server path options are correct, and the server type is set to SteamCMD.

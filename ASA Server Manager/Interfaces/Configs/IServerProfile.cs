@@ -20,7 +20,7 @@ public interface IServerProfile : INotifyPropertyChanged, IHasChanges
 
     bool IsValid { get; }
 
-    string Map { get; set; }
+    string MapID { get; set; }
 
     int? MaxPlayers { get; set; }
 

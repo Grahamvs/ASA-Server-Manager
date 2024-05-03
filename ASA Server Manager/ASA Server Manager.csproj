@@ -34,6 +34,7 @@
 		<None Remove="Resources\Icons\Help.png" />
 		<None Remove="Resources\Icons\History.png" />
 		<None Remove="Resources\Icons\Info.png" />
+		<None Remove="Resources\Icons\Map.png" />
 		<None Remove="Resources\Icons\PayPal.png" />
 		<None Remove="Resources\Icons\Radio_Button_Checked.png" />
 		<None Remove="Resources\Icons\Radio_Button_Unchecked.png" />
@@ -79,6 +80,7 @@
 		<Resource Include="Resources\Icons\Help.png" />
 		<Resource Include="Resources\Icons\History.png" />
 		<Resource Include="Resources\Icons\Info.png" />
+		<Resource Include="Resources\Icons\Map.png" />
 		<Resource Include="Resources\Icons\PayPal.png" />
 		<Resource Include="Resources\Icons\Radio_Button_Checked.png" />
 		<Resource Include="Resources\Icons\Radio_Button_Unchecked.png" />

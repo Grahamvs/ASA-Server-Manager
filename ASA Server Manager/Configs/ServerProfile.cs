@@ -18,7 +18,7 @@ public class ServerProfile : BindableBase, IServerProfile
     private string _clusterID;
     private bool _hasChanges;
     private bool _isValid;
-    private string _map;
+    private string _mapID;
     private int? _maxPlayers;
     private int? _maxTributeDinos;
     private int? _maxTributeItems;
@@ -93,10 +93,10 @@ public class ServerProfile : BindableBase, IServerProfile
         private set => SetProperty(ref _isValid, value);
     }
 
-    public string Map
+    public string MapID
     {
-        get => _map;
-        set => SetProperty(ref _map, value, Validate);
+        get => _mapID;
+        set => SetProperty(ref _mapID, value, Validate);
     }
 
     public int? MaxPlayers
@@ -305,7 +305,7 @@ public class ServerProfile : BindableBase, IServerProfile
 
     private void Validate()
     {
-        IsValid = !Map.IsNullOrEmpty() && !SessionName.IsNullOrWhiteSpace();
+        IsValid = !MapID.IsNullOrEmpty() && !SessionName.IsNullOrWhiteSpace();
     }
 
     #endregion

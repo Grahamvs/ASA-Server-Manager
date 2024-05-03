@@ -90,6 +90,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
         ShowSettingsCommand = CreateBasedCommand(new ActionCommand(ExecuteShowSettingsCommand));
         ShowAvailableModsCommand = CreateBasedCommand(new ActionCommand(ExecuteShowAvailableModsCommand));
+        ShowCustomMapsCommand = CreateBasedCommand(new ActionCommand(ExecuteShowCustomMapsCommand));
         ShowAboutWindowCommand = CreateBasedCommand(new ActionCommand(ExecuteShowAboutWindowCommand));
 
         SortListViewCommand = CreateBasedCommand(new ActionCommand<string>(ExecuteSortListViewCommand));
@@ -112,6 +113,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
         var runCommand = new ActionCommand(async () => await ExecuteRunServerCommandAsync().ConfigureAwait(false), CanExecuteRunServerCommand)
             .ObservesProperty(() => CanRunServer)
+            .ObservesProperty(() => SelectedMap)
             .ObservesProperty(() => ProfileIsValid);
 
         RunServerCommand = CreateBasedCommand(autosaveCommand, runCommand);
@@ -142,7 +144,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     #region Public Properties
 
-    public IReadOnlyList<string> AvailableMaps => _mapService.AvailableIDs;
+    public IReadOnlyList<MapDetails> AvailableMaps => _mapService.AvailableMaps;
 
     public ICommand BrowseClusterDirOverrideCommand { get; }
 
@@ -178,7 +180,9 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public ICommand OpenFolderCommand => _serverHelper.OpenFolderCommand;
 
-    public bool ProfileIsValid => CurrentProfile?.IsValid ?? false;
+    public bool ProfileIsValid =>
+        (CurrentProfile?.IsValid ?? false)
+        && SelectedMap != null;
 
     public IEnumerable<string> RecentProfiles => _appSettingsService.RecentProfiles;
 
@@ -187,6 +191,12 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     public ICommand SaveAsCommand { get; }
 
     public ICommand SaveCommand { get; }
+
+    public MapDetails SelectedMap
+    {
+        get => AvailableMaps.FirstOrDefault(map => map.ID == CurrentProfile.MapID);
+        set => CurrentProfile.MapID = value?.ID;
+    }
 
     public SelectableMod SelectedMod
     {
@@ -199,6 +209,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     public ICommand ShowAboutWindowCommand { get; }
 
     public ICommand ShowAvailableModsCommand { get; }
+
+    public ICommand ShowCustomMapsCommand { get; }
 
     public bool ShowModIDColumn => _appSettingsService.ShowModIDColumn;
 
@@ -245,7 +257,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
             _mapService
                 .FromPropertyChangedPattern()
-                .WherePropertyIs(nameof(IMapService.AvailableIDs))
+                .WherePropertyIs(nameof(IMapService.AvailableMaps))
                 .Subscribe(_ => RaisePropertyChanged(nameof(AvailableMaps))),
 
             _appSettingsService
@@ -268,7 +280,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
             nameof(ShowUpdateCommand),
             nameof(WindowTitle),
             nameof(AvailableMaps),
-            nameof(CurrentProfile)
+            nameof(CurrentProfile),
+            nameof(SelectedMap)
         );
     }
 
@@ -384,6 +397,20 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         RefreshModList();
     }
 
+    private void ExecuteShowCustomMapsCommand()
+    {
+        var result = _viewService.ShowViewDialog<ICustomMapsViewModel>(startupLocation: WindowStartupLocation.CenterOwner, owner: this);
+
+        if (result != true)
+            return;
+
+        RaisePropertiesChanged(
+            nameof(AvailableMaps),
+            nameof(SelectedMap),
+            nameof(ProfileIsValid)
+        );
+    }
+
     private void ExecuteShowSettingsCommand()
     {
         _viewService.ShowViewDialog<ISettingsViewModel>(startupLocation: WindowStartupLocation.CenterOwner, owner: this);
@@ -488,16 +515,31 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         {
             currentProfile
                 .FromPropertyChangedPattern()
-                .WherePropertyIs(nameof(IServerProfile.IsValid))
-                .Subscribe(_ => RaisePropertyChanged(nameof(ProfileIsValid))),
+                .Subscribe(pattern => OnCurrentProfile_PropertyChanged(pattern.EventArgs)),
+         };
 
-            currentProfile
-                .FromPropertyChangedPattern()
-                .WherePropertyIs(nameof(IServerProfile.HasChanges))
-                .Subscribe(_ => RaisePropertiesChanged(nameof(WindowTitle))),
-        };
+        RaisePropertiesChanged(
+            nameof(CurrentProfile),
+            nameof(SelectedMap)
+        );
+    }
 
-        RaisePropertyChanged(nameof(CurrentProfile));
+    private void OnCurrentProfile_PropertyChanged(PropertyChangedEventArgs patternEventArgs)
+    {
+        switch (patternEventArgs.PropertyName)
+        {
+            case nameof(IServerProfile.MapID):
+                RaisePropertyChanged(nameof(SelectedMap));
+                break;
+
+            case nameof(IServerProfile.IsValid):
+                RaisePropertyChanged(nameof(ProfileIsValid));
+                break;
+
+            case nameof(IServerProfile.HasChanges):
+                RaisePropertyChanged(nameof(WindowTitle));
+                break;
+        }
     }
 
     private bool OnModsFilter(object obj)

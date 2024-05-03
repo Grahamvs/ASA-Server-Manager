@@ -36,6 +36,7 @@
 
         <KeyBinding Key="F9" Command="{Binding ShowSettingsCommand}" />
         <KeyBinding Key="F10" Command="{Binding ShowAvailableModsCommand}" />
+        <KeyBinding Key="F11" Command="{Binding ShowCustomMapsCommand}" />
         <KeyBinding Key="F12" Command="{Binding ShowAboutWindowCommand}" />
 
     </Window.InputBindings>
@@ -325,6 +326,16 @@
                     </MenuItem.Icon>
                 </MenuItem>
 
+                <MenuItem
+                    Header="_Custom Maps"
+                    Command="{Binding ShowCustomMapsCommand}"
+                    InputGestureText="F11">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Map.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
             </MenuItem>
 
             <MenuItem Header="_Help">
@@ -391,9 +402,10 @@
                             HorizontalAlignment="Stretch">
                             <ComboBox
                                 Margin="5"
-                                IsEditable="True"
+                                IsEditable="False"
                                 ItemsSource="{Binding AvailableMaps}"
-                                Text="{Binding CurrentProfile.Map}" />
+                                DisplayMemberPath="Name"
+                                SelectedItem="{Binding SelectedMap, UpdateSourceTrigger=PropertyChanged}" />
                         </controls:SettingsControl>
 
                         <!-- Session Name -->

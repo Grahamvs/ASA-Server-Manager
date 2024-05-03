@@ -40,6 +40,7 @@ public static class DIModule
         RegisterViewAndModel<ISettingsViewModel, SettingsViewModel, SettingsWindow>();
         RegisterViewAndModel<IAvailableModsViewModel, AvailableModsViewModel, AvailableModsWindow>();
         RegisterViewAndModel<IAboutViewModel, AboutViewModel, AboutWindow>();
+        RegisterViewAndModel<ICustomMapsViewModel, CustomMapsViewModel, CustomMapsWindow>();
 
         // Services & Helpers
         container.Register<IViewService, ViewService>();

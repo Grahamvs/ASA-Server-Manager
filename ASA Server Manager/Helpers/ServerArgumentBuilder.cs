@@ -105,7 +105,7 @@ public class ServerArgumentBuilder
             _optionsList.Add($" {profile.AdditionalArguments.Trim()}");
         }
 
-        _argumentBuilder = new StringBuilder($"{profile.Map}?SessionName=\"{profile.SessionName}\"");
+        _argumentBuilder = new StringBuilder($"{profile.MapID}?SessionName=\"{profile.SessionName}\"");
         _argumentBuilder.Append(string.Join("", _settingsList));
         _argumentBuilder.Append(string.Join("", _optionsList));
 

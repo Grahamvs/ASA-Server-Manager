@@ -1,5 +1,6 @@
 ﻿using ASA_Server_Manager.Common;
-using ASA_Server_Manager.Extensions;
+using ASA_Server_Manager.Configs;
+using ASA_Server_Manager.Interfaces.Serialization;
 using ASA_Server_Manager.Interfaces.Services;
 
 namespace ASA_Server_Manager.Services;
@@ -8,33 +9,44 @@ public class MapService : BindableBase, IMapService
 {
     #region Private Fields
 
-    private static readonly IReadOnlyList<string> OfficialMapIDs = ["TheIsland_WP", "ScorchedEarth_WP"];
+    private static readonly IReadOnlyList<MapDetails> OfficialMapIDs =
+    [
+        new MapDetails {ID = "TheIsland_WP", Name = "The Island"},
+        new MapDetails {ID = "ScorchedEarth_WP", Name = "Scorched Earth"},
+    ];
 
-    private readonly List<string> _customIDs = [];
+    private readonly IDialogService _dialogService;
     private readonly string _filePath = "AvailableMaps.txt";
     private readonly IFileSystemService _fileSystemService;
+    private readonly ISerializer _serializer;
+    private List<MapDetails> _customMaps = [];
 
     #endregion
 
     #region Public Constructors
 
-    public MapService(IFileSystemService fileSystemService)
+    public MapService(
+        IFileSystemService fileSystemService,
+        ISerializer serializer,
+        IDialogService dialogService)
     {
         _fileSystemService = fileSystemService;
+        _serializer = serializer;
+        _dialogService = dialogService;
     }
 
     #endregion
 
     #region Public Properties
 
-    public IReadOnlyList<string> AvailableIDs =>
-        OfficialIDs
-            .Union(_customIDs, StringComparer.OrdinalIgnoreCase)
+    public IReadOnlyList<MapDetails> AvailableMaps =>
+        OfficialMaps
+            .Concat(CustomMaps.Where(map => OfficialMapIDs.All(officialMap => officialMap.ID != map.ID)))
             .ToList();
 
-    public IReadOnlyList<string> CustomIDs => _customIDs;
+    public IReadOnlyList<MapDetails> CustomMaps => _customMaps;
 
-    public IReadOnlyList<string> OfficialIDs => OfficialMapIDs;
+    public IReadOnlyList<MapDetails> OfficialMaps => OfficialMapIDs;
 
     #endregion
 
@@ -42,38 +54,45 @@ public class MapService : BindableBase, IMapService
 
     public void RefreshAvailableMaps()
     {
-        _customIDs.Clear();
+        _customMaps.Clear();
 
-        if (EnsureMapIDFileExists())
+        List<MapDetails> mapsList = null;
+        try
         {
-            _customIDs.AddRange(
-                _fileSystemService.ReadAllLines(_filePath)
-                    .Where(value => !value.IsNullOrWhiteSpace())
-                    .Select(value => value?.Trim())
-                    .Except(OfficialMapIDs, StringComparer.OrdinalIgnoreCase)
-            );
+            if (_fileSystemService.FileExists(_filePath))
+            {
+                mapsList = _serializer.DeserializeFromFile<List<MapDetails>>(_filePath);
+            }
+        }
+        catch (Exception exception)
+        {
+            _dialogService.ShowErrorMessage($"Unable to load custom maps:\r\n\r\n{exception.Message}");
         }
 
-        RaisePropertyChanged(nameof(CustomIDs));
-        RaisePropertyChanged(nameof(AvailableIDs));
+        SetCustomMaps(mapsList);
     }
 
-    #endregion
-
-    #region Private Methods
-
-    /// <summary>
-    /// Ensures the map ID file list exists.
-    /// </summary>
-    /// <returns> Returns true if the file already exists </returns>
-    private bool EnsureMapIDFileExists()
+    public void Save()
     {
-        if (_fileSystemService.FileExists(_filePath))
-            return true;
+        try
+        {
+            _serializer.SerializeToFile(_customMaps, _filePath);
+        }
+        catch (Exception exception)
+        {
+            _dialogService.ShowErrorMessage($"Unable to save to file:\r\n\r\n{exception.Message}");
+        }
+    }
 
-        _fileSystemService.WriteAllLines(_filePath, AvailableIDs);
+    public void SetCustomMaps(IEnumerable<MapDetails> maps)
+    {
+        maps ??= [];
 
-        return false;
+        var officialIDs = OfficialMapIDs.Select(m => m.ID).ToList();
+
+        _customMaps = maps.Where(map => !officialIDs.Contains(map.ID)).ToList();
+
+        RaisePropertiesChanged(nameof(CustomMaps), nameof(AvailableMaps));
     }
 
     #endregion
