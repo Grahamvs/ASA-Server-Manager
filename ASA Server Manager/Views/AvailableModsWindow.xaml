@@ -38,10 +38,6 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-        <Style TargetType="Expander" BasedOn="{StaticResource {x:Type Expander}}">
-            <Setter Property="Margin" Value="5" />
-        </Style>
-
     </Window.Resources>
 
     <Grid>
@@ -69,7 +65,7 @@
 
                 <controls:HintedTextBox
                     Grid.Row="0"
-                    Text="{Binding ModFilterText, UpdateSourceTrigger=PropertyChanged}"
+                    Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
                     Hint="Filter" />
 
                 <DataGrid
@@ -98,7 +94,7 @@
 
                     <Button
                         Height="40"
-                        Command="{Binding MoveSelectedModCommand}"
+                        Command="{Binding MoveSelectedItemCommand}"
                         CommandParameter="{x:Static enums:MoveDirection.Up}">
                         <Button.Content>
                             <Image Source="/Resources/Icons/Arrow_Collapse_Up.png" />
@@ -107,7 +103,7 @@
 
                     <Button
                         Height="40"
-                        Command="{Binding MoveSelectedModCommand}"
+                        Command="{Binding MoveSelectedItemCommand}"
                         CommandParameter="{x:Static enums:MoveDirection.Down}">
                         <Button.Content>
                             <Image Source="/Resources/Icons/Arrow_Collapse_Down.png" />
@@ -116,7 +112,7 @@
 
                     <Button
                         Height="40"
-                        Command="{Binding DeleteModCommand}">
+                        Command="{Binding DeleteCommand}">
                         <Button.Content>
                             <Image Source="/Resources/Icons/Delete.png" />
                         </Button.Content>
