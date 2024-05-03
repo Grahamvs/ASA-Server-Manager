@@ -59,15 +59,23 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         var baseCommand = new ActionCommand(() => { }, () => !IsBusy)
             .ObservesProperty(() => IsBusy);
 
-        BrowseFileCommand = CreateBasedCommand(new ActionCommand<FilePathEnum>(ExecuteBrowseFileCommand));
-        SaveCommand = CreateBasedCommand(new ActionCommand(ExecuteSaveCommand, CanExecuteSaveCommand));
-
-        var installCommand = new ActionCommand(async () => await ExecuteInstallSteamCmdCommandAsync())
+        var serverTypeBaseCommand = new ActionCommand(() => { })
             .ObservesProperty(() => SelectedServerType)
             .ObservesProperty(() => SteamCmdPath)
             .ObservesProperty(() => ServerPath);
+        ;
 
-        InstallSteamCmdCommand = CreateBasedCommand(installCommand);
+        BrowseFileCommand = CreateBasedCommand(new ActionCommand<FilePathEnum>(ExecuteBrowseFileCommand));
+
+        SaveCommand = CreateBasedCommand(
+            serverTypeBaseCommand,
+            new ActionCommand(ExecuteSaveCommand, CanExecuteSaveCommand)
+        );
+
+        InstallSteamCmdCommand = CreateBasedCommand(
+            serverTypeBaseCommand,
+            new ActionCommand(async () => await ExecuteInstallSteamCmdCommandAsync(), CanExecuteInstallSteamCmdCommandAsync)
+        );
 
         return;
 
@@ -88,6 +96,8 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
             };
         }
     }
+
+    private bool CanExecuteInstallSteamCmdCommandAsync() => SelectedServerType == ServerInstallType.SteamCMD;
 
     private bool CanExecuteSaveCommand() =>
         SelectedServerType switch
