@@ -28,6 +28,16 @@
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
         <KeyBinding Key="S" Modifiers="Control+Shift" Command="{Binding SaveAsCommand}" />
 
+        <KeyBinding Key="F1" Command="{Binding OpenFAQCommand}" />
+
+        <KeyBinding Key="F5" Command="{Binding RunServerCommand}" />
+        <KeyBinding Key="F4" Command="{Binding UpdateCommand}" />
+        <KeyBinding Key="F6" Command="{Binding ServerBackupCommand}" />
+
+        <KeyBinding Key="F9" Command="{Binding ShowSettingsCommand}" />
+        <KeyBinding Key="F10" Command="{Binding ShowAvailableModsCommand}" />
+        <KeyBinding Key="F12" Command="{Binding ShowAboutWindowCommand}" />
+
     </Window.InputBindings>
 
     <Window.Resources>
@@ -100,10 +110,10 @@
             Grid.Row="0"
             IsEnabled="{Binding IsBusy, Converter={converters:NegatedBoolConverter}}">
 
-            <MenuItem Header="File" StaysOpenOnClick="True">
+            <MenuItem Header="_File">
 
                 <MenuItem
-                    Header="New"
+                    Header="_New"
                     InputGestureText="Ctrl+N"
                     Command="{Binding NewProfileCommand}">
 
@@ -118,7 +128,7 @@
                 </MenuItem>
 
                 <MenuItem
-                    Header="Load"
+                    Header="L_oad"
                     InputGestureText="Ctrl+O"
                     Command="{Binding LoadProfileCommand}">
 
@@ -157,7 +167,7 @@
                 <Separator />
 
                 <MenuItem
-                    Header="Recent"
+                    Header="_Recents"
                     ItemsSource="{Binding Path=RecentProfiles}"
                     IsEnabled="{Binding HasRecentProfiles}">
 
@@ -182,16 +192,16 @@
 
             </MenuItem>
 
-            <MenuItem Header="Server">
+            <MenuItem Header="_Server">
 
-                <MenuItem Header="Open Folder">
+                <MenuItem Header="_Open Folder">
 
                     <MenuItem.Icon>
                         <Image Source="/Resources/Icons/File_Explorer.png" />
                     </MenuItem.Icon>
 
                     <MenuItem
-                        Header="SteamCMD"
+                        Header="Steam_CMD"
                         Command="{Binding OpenFolderCommand}"
                         CommandParameter="{x:Static enums:ServerFolders.SteamCmd}"
                         Visibility="{Binding ShowUpdateCommand, Converter={converters:BooleanToVisibilityConverter}}">
@@ -203,7 +213,7 @@
                     </MenuItem>
 
                     <MenuItem
-                        Header="ASA Server"
+                        Header="_ASA Server"
                         Command="{Binding OpenFolderCommand}"
                         CommandParameter="{x:Static enums:ServerFolders.ServerPath}">
 
@@ -214,7 +224,7 @@
                     </MenuItem>
 
                     <MenuItem
-                        Header="ASA Server Save"
+                        Header="ASA Server _Save"
                         Command="{Binding OpenFolderCommand}"
                         CommandParameter="{x:Static enums:ServerFolders.ServerSave}">
 
@@ -225,7 +235,7 @@
                     </MenuItem>
 
                     <MenuItem
-                        Header="Current Profile"
+                        Header="Current _Profile"
                         Command="{Binding OpenFolderCommand}"
                         CommandParameter="{x:Static enums:ServerFolders.Profile}">
 
@@ -236,7 +246,7 @@
                     </MenuItem>
 
                     <MenuItem
-                        Header="Backup Executable"
+                        Header="_Backup Executable"
                         Command="{Binding OpenFolderCommand}"
                         CommandParameter="{x:Static enums:ServerFolders.BackupExe}"
                         Visibility="{Binding ShowServerBackupCommand, Converter={converters:BooleanToVisibilityConverter}}">
@@ -249,34 +259,55 @@
 
                 </MenuItem>
 
-                <MenuItem
-                    Header="Update"
-                    Command="{Binding UpdateCommand}"
-                    Visibility="{Binding ShowUpdateCommand, Converter={converters:BooleanToVisibilityConverter}}">
-
-                    <MenuItem.Icon>
-                        <Image Source="/Resources/Icons/Update.png" />
-                    </MenuItem.Icon>
-
-                </MenuItem>
-
-                <MenuItem
-                    Header="Run Backup"
-                    Command="{Binding ServerBackupCommand}"
-                    Visibility="{Binding ShowServerBackupCommand, Converter={converters:BooleanToVisibilityConverter}}">
+                <MenuItem Header="_Execute">
 
                     <MenuItem.Icon>
                         <Image Source="/Resources/Icons/Run_Command.png" />
                     </MenuItem.Icon>
 
+                    <MenuItem
+                        Header="Update ASA Server"
+                        Command="{Binding UpdateCommand}"
+                        InputGestureText="F4"
+                        Visibility="{Binding ShowUpdateCommand, Converter={converters:BooleanToVisibilityConverter}}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Update.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="Run ASA Server"
+                        Command="{Binding RunServerCommand}"
+                        InputGestureText="F5">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Ark.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="Run Backup"
+                        Command="{Binding ServerBackupCommand}"
+                        InputGestureText="F6"
+                        Visibility="{Binding ShowServerBackupCommand, Converter={converters:BooleanToVisibilityConverter}}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Run_Command.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
                 </MenuItem>
 
             </MenuItem>
 
-            <MenuItem Header="Options">
+            <MenuItem Header="_Options">
                 <MenuItem
-                    Header="Settings"
-                    Command="{Binding ShowSettingsCommand}">
+                    Header="_Settings"
+                    Command="{Binding ShowSettingsCommand}"
+                    InputGestureText="F9">
 
                     <MenuItem.Icon>
                         <Image Source="/Resources/Icons/Gears_3.png" />
@@ -285,8 +316,9 @@
                 </MenuItem>
 
                 <MenuItem
-                    Header="Available Mods"
-                    Command="{Binding ShowAvailableModsCommand}">
+                    Header="_Available Mods"
+                    Command="{Binding ShowAvailableModsCommand}"
+                    InputGestureText="F10">
 
                     <MenuItem.Icon>
                         <Image Source="/Resources/Icons/Tools.png" />
@@ -295,10 +327,10 @@
 
             </MenuItem>
 
-            <MenuItem Header="Help">
+            <MenuItem Header="_Help">
 
                 <MenuItem
-                    Header="Donate"
+                    Header="_Donate"
                     Command="{Binding DonateCommand}">
 
                     <MenuItem.Icon>
@@ -307,7 +339,7 @@
                 </MenuItem>
 
                 <MenuItem
-                    Header="Check for Updates"
+                    Header="Check for _Updates"
                     Command="{Binding CheckForUpdatesCommand}">
 
                     <MenuItem.Icon>
@@ -316,8 +348,9 @@
                 </MenuItem>
 
                 <MenuItem
-                    Header="FAQ"
-                    Command="{Binding OpenFAQCommand}">
+                    Header="_FAQ"
+                    Command="{Binding OpenFAQCommand}"
+                    InputGestureText="F1">
 
                     <MenuItem.Icon>
                         <Image Source="/Resources/Icons/Help.png" />
@@ -325,8 +358,9 @@
                 </MenuItem>
 
                 <MenuItem
-                    Header="About"
-                    Command="{Binding ShowAboutWindowCommand}">
+                    Header="_About"
+                    Command="{Binding ShowAboutWindowCommand}"
+                    InputGestureText="F12">
 
                     <MenuItem.Icon>
                         <Image Source="/Resources/Icons/Info.png" />
