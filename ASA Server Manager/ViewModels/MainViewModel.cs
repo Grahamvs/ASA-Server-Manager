@@ -517,7 +517,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         return CheckValue(mode.ToString())
             || CheckValue(mod.ID.ToString())
             || CheckValue(mod.Name)
-            || CheckValue(mod.Description);
+            || CheckValue(mod.Comments);
 
         //// Local Functions \\\\
 

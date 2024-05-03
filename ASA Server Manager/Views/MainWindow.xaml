@@ -849,13 +849,13 @@
                                     </GridViewColumn>
 
                                     <!-- Description -->
-                                    <GridViewColumn DisplayMemberBinding="{Binding Description}">
+                                    <GridViewColumn DisplayMemberBinding="{Binding Comments}">
 
                                         <GridViewColumn.Header>
                                             <GridViewColumnHeader
-                                                Content="Description"
+                                                Content="Comments"
                                                 Command="{Binding SortListViewCommand}"
-                                                CommandParameter="Description"
+                                                CommandParameter="Comments"
                                                 HorizontalContentAlignment="Left" />
                                         </GridViewColumn.Header>
 

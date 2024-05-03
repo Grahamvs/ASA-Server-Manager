@@ -86,7 +86,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" MinWidth="50" Binding="{Binding ID}" />
                         <DataGridTextColumn Header="Name" MinWidth="70" Binding="{Binding Name}" />
-                        <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" />
+                        <DataGridTextColumn Header="Comments" Width="*" Binding="{Binding Comments}" />
                     </DataGrid.Columns>
 
                 </DataGrid>

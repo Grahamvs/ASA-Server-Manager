@@ -5,14 +5,14 @@ namespace ASA_Server_Manager.Configs;
 
 public class Mod : BindableBase, IMod
 {
-    private string _description;
+    private string _comments;
     private int _id;
     private string _name;
 
-    public string Description
+    public string Comments
     {
-        get => _description;
-        set => SetProperty(ref _description, value);
+        get => _comments;
+        set => SetProperty(ref _comments, value);
     }
 
     public int ID

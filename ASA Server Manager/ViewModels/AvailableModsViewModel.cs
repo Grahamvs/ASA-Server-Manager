@@ -185,7 +185,7 @@ public class AvailableModsViewModel : WindowViewModel, IAvailableModsViewModel
 
         return CheckValue(mod.ID.ToString())
             || CheckValue(mod.Name)
-            || CheckValue(mod.Description);
+            || CheckValue(mod.Comments);
 
         bool CheckValue(string value) => (value ?? string.Empty).Contains(ModFilterText, StringComparison.OrdinalIgnoreCase);
     }

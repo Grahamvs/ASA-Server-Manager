@@ -29,10 +29,10 @@ public class SelectableMod : BindableBase, IMod
 
     #region Public Properties
 
-    public string Description
+    public string Comments
     {
-        get => _mod.Description;
-        set => _mod.Description = value;
+        get => _mod.Comments;
+        set => _mod.Comments = value;
     }
 
     public int ID

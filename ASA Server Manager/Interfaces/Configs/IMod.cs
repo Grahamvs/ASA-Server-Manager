@@ -4,7 +4,7 @@ namespace ASA_Server_Manager.Interfaces.Configs;
 
 public interface IMod : INotifyPropertyChanged
 {
-    string Description { get; set; }
+    string Comments { get; set; }
 
     int ID { get; set; }
 
