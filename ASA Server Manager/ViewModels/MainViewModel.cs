@@ -174,6 +174,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public ICommand NewProfileCommand { get; }
 
+    public ICommand OpenFAQCommand { get; }
+
     public ICommand OpenFolderCommand => _serverHelper.OpenFolderCommand;
 
     public bool ProfileIsValid => CurrentProfile?.IsValid ?? false;
@@ -216,8 +218,6 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         _serverProfileService.CurrentFileName.IsNullOrWhiteSpace()
             ? _appTitle
             : $"{_appTitle}: {_serverProfileService.CurrentFileName}{(CurrentProfile.HasChanges ? "*" : string.Empty)}";
-
-    public ICommand OpenFAQCommand { get; }
 
     #endregion
 
@@ -306,8 +306,6 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         }
     }
 
-    private void ExecuteOpenFAQCommand() => OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/README.md#FAQ");
-
     private void ExecuteCheckForUpdatesCommand() => OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/releases");
 
     private void ExecuteDonateCommand()
@@ -352,6 +350,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
             RefreshModList();
         }
     }
+
+    private void ExecuteOpenFAQCommand() => OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/README.md#FAQ");
 
     private async Task ExecuteRunServerCommandAsync()
     {

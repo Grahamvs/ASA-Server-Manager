@@ -26,9 +26,9 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     private bool _autoSaveProfile;
     private string _backupExecutablePath;
     private string _busyMessage;
-    private double _progressValue;
     private IDisposable _commandToken;
     private bool _progressIsIndeterminate;
+    private double _progressValue;
     private int _recentProfilesLimit;
     private ServerInstallType _selectedServerType;
     private string _serverPath;
@@ -98,16 +98,6 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         }
     }
 
-    private bool CanExecuteInstallSteamCmdCommandAsync() => SelectedServerType == ServerInstallType.SteamCMD;
-
-    private bool CanExecuteSaveCommand() =>
-        SelectedServerType switch
-        {
-            ServerInstallType.SteamCMD => !SteamCmdPath.IsNullOrWhiteSpace(),
-            ServerInstallType.Standalone => !ServerPath.IsNullOrWhiteSpace(),
-            _ => false
-        };
-
     #endregion
 
     #region Public Properties
@@ -132,12 +122,6 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         private set => SetProperty(ref _busyMessage, value);
     }
 
-    public double ProgressValue
-    {
-        get => _progressValue;
-        set => SetProperty(ref _progressValue, value);
-    }
-
     public ICommand InstallSteamCmdCommand { get; }
 
     public bool IsBusy => _isBusyHelper.HasTokens;
@@ -146,6 +130,12 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     {
         get => _progressIsIndeterminate;
         set => SetProperty(ref _progressIsIndeterminate, value);
+    }
+
+    public double ProgressValue
+    {
+        get => _progressValue;
+        set => SetProperty(ref _progressValue, value);
     }
 
     public int RecentProfilesLimit
@@ -217,6 +207,16 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     #endregion
 
     #region Private Methods
+
+    private bool CanExecuteInstallSteamCmdCommandAsync() => SelectedServerType == ServerInstallType.SteamCMD;
+
+    private bool CanExecuteSaveCommand() =>
+        SelectedServerType switch
+        {
+            ServerInstallType.SteamCMD => !SteamCmdPath.IsNullOrWhiteSpace(),
+            ServerInstallType.Standalone => !ServerPath.IsNullOrWhiteSpace(),
+            _ => false
+        };
 
     private void ExecuteBrowseFileCommand(FilePathEnum filePathEnum)
     {
