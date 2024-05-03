@@ -834,7 +834,9 @@
                                     </GridViewColumn>
 
                                     <!-- ID -->
-                                    <GridViewColumn DisplayMemberBinding="{Binding ID}" Width="Auto">
+                                    <GridViewColumn
+                                        DisplayMemberBinding="{Binding ID}"
+                                        Width="{Binding ShowModIDColumn, Converter={commands:BooleanToAutoWidthConverter}}">
 
                                         <GridViewColumn.Header>
                                             <GridViewColumnHeader

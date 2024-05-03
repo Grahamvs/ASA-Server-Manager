@@ -32,6 +32,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     private int _recentProfilesLimit;
     private ServerInstallType _selectedServerType;
     private string _serverPath;
+    private bool _showModIDColumn;
     private string _steamCmdPath;
     private bool _updateOnFirstRun;
 
@@ -167,6 +168,12 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         set => SetProperty(ref _serverPath, value);
     }
 
+    public bool ShowModIDColumn
+    {
+        get => _showModIDColumn;
+        set => SetProperty(ref _showModIDColumn, value);
+    }
+
     public string SteamCmdPath
     {
         get => _steamCmdPath;
@@ -198,6 +205,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         RecentProfilesLimit = _appSettingsService.RecentProfilesLimit;
         SelectedServerType = _appSettingsService.ServerType;
         ServerPath = _appSettingsService.ServerPath;
+        ShowModIDColumn = _appSettingsService.ShowModIDColumn;
         SteamCmdPath = _appSettingsService.SteamCmdPath;
         UpdateOnFirstRun = _appSettingsService.UpdateOnFirstRun;
     }
@@ -328,6 +336,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         _appSettingsService.BackupExecutablePath = BackupExecutablePath;
         _appSettingsService.RecentProfilesLimit = RecentProfilesLimit;
         _appSettingsService.ServerType = SelectedServerType;
+        _appSettingsService.ShowModIDColumn = ShowModIDColumn;
         _appSettingsService.SteamCmdPath = SteamCmdPath;
         _appSettingsService.UpdateOnFirstRun = UpdateOnFirstRun;
 

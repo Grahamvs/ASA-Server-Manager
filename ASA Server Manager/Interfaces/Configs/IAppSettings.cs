@@ -21,6 +21,8 @@ public interface IAppSettings : INotifyPropertyChanged
 
     ServerInstallType ServerType { get; set; }
 
+    bool ShowModIDColumn { get; set; }
+
     string SteamCmdPath { get; set; }
 
     bool UpdateOnFirstRun { get; set; }

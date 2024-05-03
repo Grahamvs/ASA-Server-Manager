@@ -196,6 +196,11 @@
                             <CheckBox IsChecked="{Binding UpdateOnFirstRun}" />
                         </controls:SettingsControl>
 
+                        <!-- Show Mod IDs -->
+                        <controls:SettingsControl Label="Show Mod ID Column:">
+                            <CheckBox IsChecked="{Binding ShowModIDColumn}" />
+                        </controls:SettingsControl>
+
                         <!-- Recent Profiles Limit -->
                         <controls:SettingsControl Label="Recent Profiles Limit:">
 

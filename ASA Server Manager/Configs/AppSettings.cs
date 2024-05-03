@@ -15,6 +15,7 @@ public class AppSettings : BindableBase, IAppSettings
     private int _recentProfilesLimit = 5;
     private string _serverPath;
     private ServerInstallType _serverType;
+    private bool _showModIDColumn;
     private string _steamCmdPath;
     private bool _updateOnFirstRun = true;
 
@@ -60,6 +61,12 @@ public class AppSettings : BindableBase, IAppSettings
     {
         get => _serverType;
         set => SetProperty(ref _serverType, value);
+    }
+
+    public bool ShowModIDColumn
+    {
+        get => _showModIDColumn;
+        set => SetProperty(ref _showModIDColumn, value);
     }
 
     public string SteamCmdPath

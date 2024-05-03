@@ -77,6 +77,12 @@ public class AppSettingsService : BindableBase, IAppSettingsService
         set => _appSettings.ServerType = value;
     }
 
+    public bool ShowModIDColumn
+    {
+        get => _appSettings.ShowModIDColumn;
+        set => _appSettings.ShowModIDColumn = value;
+    }
+
     public string SteamCmdPath
     {
         get => AppSettings.SteamCmdPath;

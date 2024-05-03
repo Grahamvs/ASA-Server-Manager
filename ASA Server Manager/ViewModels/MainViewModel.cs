@@ -198,6 +198,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public ICommand ShowAvailableModsCommand { get; }
 
+    public bool ShowModIDColumn => _appSettingsService.ShowModIDColumn;
+
     public bool ShowServerBackupCommand => _serverHelper.BackupExecutablePathIsValid;
 
     public ICommand ShowSettingsCommand { get; }
@@ -386,7 +388,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     {
         _viewService.ShowViewDialog<ISettingsViewModel>(startupLocation: WindowStartupLocation.CenterOwner, owner: this);
 
-        RaisePropertyChanged(nameof(ShowUpdateCommand));
+        RaisePropertiesChanged(nameof(ShowUpdateCommand), nameof(ShowModIDColumn));
     }
 
     private void ExecuteSortListViewCommand(string sortBy)
