@@ -62,6 +62,7 @@ public static class DIModule
         container.RegisterSingleton<IMapService, MapService>();
         container.RegisterSingleton<IModService, ModService>();
         container.RegisterSingleton<IApplicationService, ApplicationService>();
+        container.RegisterSingleton<IUpdateService, UpdateService>();
 
         return;
 
