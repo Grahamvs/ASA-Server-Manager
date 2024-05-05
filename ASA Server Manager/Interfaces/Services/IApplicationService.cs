@@ -2,6 +2,8 @@
 
 public interface IApplicationService
 {
+    #region Public Properties
+
     string Company { get; }
 
     string Copyright { get; }
@@ -14,6 +16,8 @@ public interface IApplicationService
 
     string ExePath { get; }
 
+    string Name { get; }
+
     string Title { get; }
 
     string TradeMark { get; }
@@ -22,5 +26,11 @@ public interface IApplicationService
 
     string WorkingDirectory { get; }
 
+    #endregion
+
+    #region Public Methods
+
     void Shutdown();
+
+    #endregion
 }

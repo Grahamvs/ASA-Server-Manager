@@ -55,6 +55,24 @@ public class AppSettingsService : BindableBase, IAppSettingsService
         set => AppSettings.BackupExecutablePath = value;
     }
 
+    public UpdateFrequency CheckForAppUpdates
+    {
+        get => _appSettings.CheckForAppUpdates;
+        set => _appSettings.CheckForAppUpdates = value;
+    }
+
+    public string IgnoredAppVersion
+    {
+        get => _appSettings.IgnoredAppVersion;
+        set => _appSettings.IgnoredAppVersion = value;
+    }
+
+    public DateTime? LastCheckedForAppUpdate
+    {
+        get => _appSettings.LastCheckedForAppUpdate;
+        set => _appSettings.LastCheckedForAppUpdate = value;
+    }
+
     public string LastProfile => AppSettings.LastProfile;
 
     public IReadOnlyList<string> RecentProfiles => ((IAppSettings)_appSettings).RecentProfiles;

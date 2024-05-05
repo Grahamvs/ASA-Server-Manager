@@ -11,6 +11,12 @@ public interface IAppSettings : INotifyPropertyChanged
 
     string BackupExecutablePath { get; set; }
 
+    UpdateFrequency CheckForAppUpdates { get; set; }
+
+    string IgnoredAppVersion { get; set; }
+
+    DateTime? LastCheckedForAppUpdate { get; set; }
+
     string LastProfile { get; }
 
     IReadOnlyList<string> RecentProfiles { get; }

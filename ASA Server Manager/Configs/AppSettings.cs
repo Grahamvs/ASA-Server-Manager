@@ -11,6 +11,9 @@ public class AppSettings : BindableBase, IAppSettings
 
     private bool _autoSaveProfile = true;
     private string _backupExecutablePath;
+    private UpdateFrequency _checkForAppUpdates = UpdateFrequency.OnStart;
+    private string _ignoredAppVersion;
+    private DateTime? _lastCheckedForAppUpdate;
     private LinkedList<string> _recentProfiles = new();
     private int _recentProfilesLimit = 5;
     private string _serverPath;
@@ -33,6 +36,24 @@ public class AppSettings : BindableBase, IAppSettings
     {
         get => _backupExecutablePath;
         set => SetProperty(ref _backupExecutablePath, value);
+    }
+
+    public UpdateFrequency CheckForAppUpdates
+    {
+        get => _checkForAppUpdates;
+        set => SetProperty(ref _checkForAppUpdates, value, OnCheckForAppUpdatesChanged);
+    }
+
+    public string IgnoredAppVersion
+    {
+        get => _ignoredAppVersion;
+        set => SetProperty(ref _ignoredAppVersion, value);
+    }
+
+    public DateTime? LastCheckedForAppUpdate
+    {
+        get => _lastCheckedForAppUpdate;
+        set => SetProperty(ref _lastCheckedForAppUpdate, value);
     }
 
     public string LastProfile => _recentProfiles.First?.Value;
@@ -102,6 +123,14 @@ public class AppSettings : BindableBase, IAppSettings
     #endregion
 
     #region Private Methods
+
+    private void OnCheckForAppUpdatesChanged()
+    {
+        if (CheckForAppUpdates == UpdateFrequency.Never)
+        {
+            LastCheckedForAppUpdate = null;
+        }
+    }
 
     private void TrimRecentProfilesList(bool raiseChanged)
     {
