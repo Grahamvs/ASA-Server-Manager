@@ -335,20 +335,23 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     private void ExecuteLoadProfileCommand(CommandParameter parameter)
     {
-        var fileName = parameter.Parameter is string val
-            ? _fileSystemService.GetFullPath(val, _applicationService.WorkingDirectory)
+        var workingDirectory = _applicationService.WorkingDirectory;
+
+        // Check if we are loading a new profile, or loading one of the recent profiles.
+        var fileName = parameter?.Parameter is string profile
+            ? _fileSystemService.GetFullPath(profile, workingDirectory)
             : null;
 
         if (fileName.IsNullOrWhiteSpace() || !_fileSystemService.FileExists(fileName))
         {
-            var file = _serverProfileService.CurrentFilePath;
-
             var ext = ServerProfileService.ProfileExtension;
             var description = ServerProfileService.ProfileDescription;
 
-            var initialDirectory = !file.IsNullOrWhiteSpace()
-                ? _fileSystemService.GetDirectoryName(file)
-                : _applicationService.WorkingDirectory;
+            var (folder, exists) = _serverHelper.GetFolder(ServerFolders.Profile);
+
+            var initialDirectory = exists
+                ? folder
+                : workingDirectory;
 
             fileName = _dialogService.OpenFileDialog(
                 $"{description}|*.{ext}",

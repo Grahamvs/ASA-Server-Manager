@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
+using ASA_Server_Manager.Enums;
 using ASA_Server_Manager.Interfaces.Configs;
 
 namespace ASA_Server_Manager.Interfaces.Helpers;
@@ -27,6 +28,8 @@ public interface IServerHelper : INotifyPropertyChanged
     #region Public Methods
 
     Task<string> DownloadSteamCmdAsync(string steamCmdFolder, IProgress<double> progress = null, CancellationToken? cancellationToken = null);
+
+    (string Folder, bool Exists) GetFolder(ServerFolders folder);
 
     Task RunBackupExecutable();
 

@@ -33,7 +33,6 @@ public class ServerHelper : BindableBase, IServerHelper
     private IDisposable _steamCmdMonitorSubscription;
     private int _updateCount;
     private bool _updatingServer;
-    private ActionCommand<ServerFolders> _openFolderCommand;
 
     #endregion
 
@@ -58,8 +57,8 @@ public class ServerHelper : BindableBase, IServerHelper
         _processHelper = processHelper;
         _downloadHelper = downloadHelper;
 
-        _openFolderCommand = new ActionCommand<ServerFolders>(ExecuteActionCommand, CanExecuteActionCommand);
-        OpenFolderCommand = _openFolderCommand;
+        var openFolderCommand = new ActionCommand<ServerFolders>(ExecuteOpenFolderCommand, folder => GetFolder(folder).Exists);
+        OpenFolderCommand = openFolderCommand;
 
         _appSettingsService
             .FromPropertyChangedPattern()
@@ -79,7 +78,7 @@ public class ServerHelper : BindableBase, IServerHelper
         _appSettingsService
             .FromPropertyChangedPattern()
             .Sample(TimeSpan.FromMilliseconds(200))
-            .Subscribe(_ => _openFolderCommand.RaiseCanExecuteChanged());
+            .Subscribe(_ => openFolderCommand.RaiseCanExecuteChanged());
 
         _workingDirectory = applicationService.WorkingDirectory;
 
@@ -184,6 +183,21 @@ public class ServerHelper : BindableBase, IServerHelper
         return steamCmdPath;
     }
 
+    public (string Folder, bool Exists) GetFolder(ServerFolders folder)
+    {
+        var dir = folder switch
+        {
+            ServerFolders.SteamCmd => SteamCmdFolder,
+            ServerFolders.ServerPath => ServerFolder(),
+            ServerFolders.ServerSave => _fileSystemService.GetFullPath("..\\..\\Saved", ServerFolder()),
+            ServerFolders.Profile => GetParentFolder(_serverProfileService.CurrentFilePath, _workingDirectory),
+            ServerFolders.BackupExe => GetParentFolder(BackupExecutablePath, _workingDirectory),
+            _ => null
+        };
+
+        return (dir, dir is { } && _fileSystemService.DirectoryExists(dir));
+    }
+
     public async Task RunBackupExecutable()
     {
         BackingUpServer = true;
@@ -237,28 +251,10 @@ public class ServerHelper : BindableBase, IServerHelper
 
     #region Private Methods
 
-    private bool CanExecuteActionCommand(ServerFolders folder) => GetFolder(folder) is { } dir && _fileSystemService.DirectoryExists(dir);
-
     private ProcessMonitor CreateMonitor(string path) =>
         !path.IsNullOrWhiteSpace()
             ? new ProcessMonitor(_fileSystemService.GetFileNameWithoutExtension(path))
             : null;
-
-    private void ExecuteActionCommand(ServerFolders folder)
-    {
-        if (GetFolder(folder) is not { } dir)
-        {
-            return;
-        }
-
-        if (!_fileSystemService.DirectoryExists(dir))
-        {
-            _dialogService.ShowErrorMessage($"Cannot find folder \"{dir}\"!");
-            return;
-        }
-
-        _processHelper.CreateProcess("Explorer.exe", dir).Start();
-    }
 
     private async Task ExecuteAndWaitForProcessAsync(string exe, string arguments = null)
     {
@@ -269,17 +265,18 @@ public class ServerHelper : BindableBase, IServerHelper
         await Task.Run(process.WaitForExit);
     }
 
-    private string GetFolder(ServerFolders folder)
+    private void ExecuteOpenFolderCommand(ServerFolders folder)
     {
-        return folder switch
+        var (dir, exists) = GetFolder(folder);
+
+        if (!exists)
         {
-            ServerFolders.SteamCmd => SteamCmdFolder,
-            ServerFolders.ServerPath => ServerFolder(),
-            ServerFolders.ServerSave => _fileSystemService.GetFullPath("..\\..\\Saved", ServerFolder()),
-            ServerFolders.Profile => GetParentFolder(_serverProfileService.CurrentFilePath, _workingDirectory),
-            ServerFolders.BackupExe => GetParentFolder(BackupExecutablePath, _workingDirectory),
-            _ => null
-        };
+            var message = dir is { } ? "Cannot find folder!" : $"Cannot find folder \"{dir}\"!";
+            _dialogService.ShowErrorMessage(message);
+            return;
+        }
+
+        _processHelper.CreateProcess("Explorer.exe", dir).Start();
     }
 
     private string GetParentFolder(string path, string relativeTo)
