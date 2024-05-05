@@ -12,14 +12,7 @@ public partial class AboutWindow
 
     private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
     {
-        // Use Process.Start to open the URL in the default browser.
-        Process.Start(
-            new ProcessStartInfo
-            {
-                FileName = e.Uri.AbsoluteUri,
-                UseShellExecute = true
-            }
-        );
+        ViewModel.OpenWeblink(e.Uri.AbsoluteUri);
 
         e.Handled = true;
     }

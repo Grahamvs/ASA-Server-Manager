@@ -22,4 +22,14 @@ public class ProcessHelper : IProcessHelper
     public IEnumerable<IProcess> GetProcesses() => Process.GetProcesses().Select(p => new ProcessWrapper(p));
 
     public IEnumerable<IProcess> GetProcessesByName(string name) => Process.GetProcessesByName(name).Select(p => new ProcessWrapper(p));
+
+    public void OpenWeblink(string url)
+    {
+        var info = new ProcessStartInfo(url) { UseShellExecute = true };
+
+        var process = new Process();
+        process.StartInfo = info;
+
+        process.Start();
+    }
 }

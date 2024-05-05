@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
@@ -319,7 +318,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         }
     }
 
-    private void ExecuteCheckForUpdatesCommand() => OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/releases");
+    private void ExecuteCheckForUpdatesCommand() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/releases");
 
     private void ExecuteDonateCommand()
     {
@@ -330,7 +329,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         if (result != MessageBoxResult.Yes)
             return;
 
-        OpenWeblink("https://www.paypal.me/slayerice09");
+        _processHelper.OpenWeblink("https://www.paypal.me/slayerice09");
     }
 
     private void ExecuteLoadProfileCommand(CommandParameter parameter)
@@ -367,7 +366,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         }
     }
 
-    private void ExecuteOpenFAQCommand() => OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/README.md#FAQ");
+    private void ExecuteOpenFAQCommand() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/README.md#FAQ");
 
     private async Task ExecuteRunServerCommandAsync()
     {
@@ -567,12 +566,6 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         //// Local Functions \\\\
 
         bool CheckValue(string value) => (value ?? string.Empty).Contains(ModFilterText, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private void OpenWeblink(string url)
-    {
-        var info = new ProcessStartInfo(url) { UseShellExecute = true };
-        _processHelper.CreateProcess(info).Start();
     }
 
     private void RefreshModList()

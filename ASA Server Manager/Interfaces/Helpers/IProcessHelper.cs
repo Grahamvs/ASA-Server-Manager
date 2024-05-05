@@ -20,4 +20,6 @@ public interface IProcessHelper
     IEnumerable<IProcess> GetProcesses();
 
     IEnumerable<IProcess> GetProcessesByName(string name);
+
+    void OpenWeblink(string url);
 }

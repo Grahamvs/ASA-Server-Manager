@@ -2,4 +2,5 @@
 
 public interface IAboutViewModel : IViewModel
 {
+    void OpenWeblink(string url);
 }
