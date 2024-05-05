@@ -1,4 +1,5 @@
-﻿using ASA_Server_Manager.Helpers;
+﻿using System.Windows;
+using ASA_Server_Manager.Helpers;
 using ASA_Server_Manager.Interfaces.Helpers;
 using ASA_Server_Manager.Interfaces.Serialization;
 using ASA_Server_Manager.Interfaces.Services;
@@ -49,6 +50,10 @@ public static class DIModule
         container.Register<IServerHelper, ServerHelper>();
         container.Register<IProcessHelper, ProcessHelper>();
         container.Register<IDownloadHelper, DownloadHelper>();
+        container.Register<IToastService, ToastService>();
+
+        // Factories
+        container.Register<Window, IToastService>((_, window) => new ToastService(window));
 
         // Services (Singletons)
         container.RegisterSingleton<IAppSettingsService, AppSettingsService>();
