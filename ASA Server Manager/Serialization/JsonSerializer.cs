@@ -3,6 +3,7 @@ using ASA_Server_Manager.Attributes;
 using ASA_Server_Manager.Interfaces.Serialization;
 using ASA_Server_Manager.Interfaces.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace ASA_Server_Manager.Serialization;
@@ -16,7 +17,8 @@ public class JsonSerializer : ISerializer
     private readonly JsonSerializerSettings _settings = new()
     {
         ContractResolver = new CustomContractResolver(),
-        Formatting = Formatting.Indented
+        Formatting = Formatting.Indented,
+        Converters = new List<JsonConverter> { new StringEnumConverter() },
     };
 
     public JsonSerializer(IFileSystemService fileSystemService)
@@ -58,14 +60,15 @@ public class JsonSerializer : ISerializer
         {
             var property = base.CreateProperty(member, memberSerialization);
 
-            property.ShouldSerialize = _ => member.GetCustomAttribute<DoNotSerializeAttribute>() is null;
-
-            var relativeToAppPathAttrib = member.GetCustomAttribute<RelativeToCurrentDirectoryAttribute>();
-
-            if (relativeToAppPathAttrib != null)
+            // Existing code
+            property.ShouldSerialize = instance =>
             {
-                property.ValueProvider = new RelativeToAppPathValueProvider(member as PropertyInfo);
-            }
+                var propValue = member.MemberType == MemberTypes.Property
+                    ? ((PropertyInfo)member).GetValue(instance)
+                    : ((FieldInfo)member).GetValue(instance);
+
+                return propValue != null && member.GetCustomAttribute<DoNotSerializeAttribute>() is null;
+            };
 
             return property;
         }
