@@ -28,6 +28,7 @@
 
         <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Setter Property="Margin" Value="5" />
+            <Setter Property="Padding" Value="0" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -99,7 +100,6 @@
                             InfoText="This setting determines the server management method:&#x0a;&#x2022; SteamCMD: This method uses SteamCMD for installation and updates. It can be associated with an existing SteamCMD server installation.&#x0a;&#x2022; Standalone: This method connects to an existing ASA server installation. However, it doesn't support updates through this application.">
 
                             <ComboBox
-                                Padding="0"
                                 ItemsSource="{Binding Source={x:Type enums:ServerInstallType}, Converter={converters:EnumToItemsSourceConverter}}"
                                 SelectedValue="{Binding SelectedServerType}">
 
@@ -199,13 +199,33 @@
 
                     <StackPanel Margin="5">
 
+                        <!-- Check for App Updates -->
+                        <controls:SettingsControl Label="Check for App Updates:">
+                            <ComboBox
+                                SelectedValue="{Binding CheckForAppUpdates}"
+                                ItemsSource="{Binding Source={x:Type enums:UpdateFrequency}, Converter={converters:EnumToItemsSourceConverter}}"
+                                MinWidth="100">
+
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock
+                                            Margin="5,3"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Converter={converters:EnumToDisplayValueConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+
+                            </ComboBox>
+                        </controls:SettingsControl>
+
                         <!-- Auto Save Profiles -->
                         <controls:SettingsControl Label="Auto Save Profiles:">
                             <CheckBox IsChecked="{Binding AutoSaveProfile}" />
                         </controls:SettingsControl>
 
                         <!-- Auto Update Profiles -->
-                        <controls:SettingsControl Label="Update on First run:">
+                        <controls:SettingsControl Label="Update Server on First run:">
                             <CheckBox IsChecked="{Binding UpdateOnFirstRun}" />
                         </controls:SettingsControl>
 
@@ -219,7 +239,7 @@
 
                             <controls:NumericSpinner
                                 DefaultValue="{Binding Source={x:Static configs:Defaults.RecentProfilesLimit}, Converter={converters:IntToDoubleConverter}}"
-                                Value="{Binding RecentProfilesLimit, Converter={converters:IntToDoubleConverter}, Mode=TwoWay}"/>
+                                Value="{Binding RecentProfilesLimit, Converter={converters:IntToDoubleConverter}, Mode=TwoWay}" />
 
                         </controls:SettingsControl>
 

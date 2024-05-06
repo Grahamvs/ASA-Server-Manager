@@ -28,6 +28,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     private bool _autoSaveProfile;
     private string _backupExecutablePath;
     private string _busyMessage;
+    private UpdateFrequency _checkForAppUpdates;
     private IDisposable _commandToken;
     private bool _progressIsIndeterminate;
     private double _progressValue;
@@ -36,8 +37,8 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     private string _serverPath;
     private bool _showModIDColumn;
     private string _steamCmdPath;
-    private bool _updateOnFirstRun;
     private IToastService _toastService;
+    private bool _updateOnFirstRun;
 
     #endregion
 
@@ -128,6 +129,12 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         private set => SetProperty(ref _busyMessage, value);
     }
 
+    public UpdateFrequency CheckForAppUpdates
+    {
+        get => _checkForAppUpdates;
+        set => SetProperty(ref _checkForAppUpdates, value);
+    }
+
     public ICommand InstallSteamCmdCommand { get; }
 
     public bool IsBusy => _isBusyHelper.HasTokens;
@@ -200,6 +207,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
 
         AutoSaveProfile = _appSettingsService.AutoSaveProfile;
         BackupExecutablePath = _appSettingsService.BackupExecutablePath;
+        CheckForAppUpdates = _appSettingsService.CheckForAppUpdates;
         RecentProfilesLimit = _appSettingsService.RecentProfilesLimit;
         SelectedServerType = _appSettingsService.ServerType;
         ServerPath = _appSettingsService.ServerPath;
@@ -346,6 +354,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     {
         _appSettingsService.AutoSaveProfile = AutoSaveProfile;
         _appSettingsService.BackupExecutablePath = BackupExecutablePath;
+        _appSettingsService.CheckForAppUpdates = CheckForAppUpdates;
         _appSettingsService.RecentProfilesLimit = RecentProfilesLimit;
         _appSettingsService.ServerType = SelectedServerType;
         _appSettingsService.ShowModIDColumn = ShowModIDColumn;
