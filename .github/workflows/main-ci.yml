@@ -101,7 +101,9 @@ jobs:
       with:
         tag_name: v${{ steps.version.outputs.VERSION }}
         release_name: v${{ steps.version.outputs.VERSION }}
-        body: Bug fixes
+        body: |
+            ### Changes:
+            - Bug fixes
         draft: false
         prerelease: false
 
