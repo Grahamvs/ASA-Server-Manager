@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Windows;
+using ASA_Server_Manager.Enums;
 using ASA_Server_Manager.Extensions;
 using ASA_Server_Manager.Interfaces.Services;
 using ASA_Server_Manager.Interfaces.ViewModels;
@@ -35,6 +36,8 @@ public partial class App
                 container.GetInstance<IServerProfileService>().LoadLastProfile();
                 container.GetInstance<IModService>().Load();
 
+                CheckForUpdates(container.GetInstance<IUpdateService>(), appSettingsService.CheckForAppUpdates);
+
                 Current.MainWindow = viewService.CreateWindow<IMainViewModel>();
 
                 Current.MainWindow?.ShowDialog();
@@ -67,6 +70,23 @@ public partial class App
 
         SetAlignmentValue();
 
-        SystemParameters.StaticPropertyChanged += (sender, e) => {SetAlignmentValue();};
+        SystemParameters.StaticPropertyChanged += (sender, e) => { SetAlignmentValue(); };
+    }
+
+    private void CheckForUpdates(IUpdateService updateService, UpdateFrequency frequency)
+    {
+        switch (frequency)
+        {
+            case UpdateFrequency.Never:
+                return;
+
+            case UpdateFrequency.OnStart:
+                updateService.CheckForUpdates(false, false);
+                break;
+
+            default:
+                updateService.Start();
+                break;
+        }
     }
 }

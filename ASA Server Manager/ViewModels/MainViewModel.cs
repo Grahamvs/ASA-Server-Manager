@@ -34,6 +34,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     private readonly IServerHelper _serverHelper;
     private readonly IServerProfileService _serverProfileService;
     private readonly Func<Window, IToastService> _toastServiceFunc;
+    private readonly IUpdateService _updateService;
     private readonly IViewService _viewService;
     private IDisposable _commandToken;
     private CompositeDisposable _currentProfileSubscriptions;
@@ -60,6 +61,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         IModService modService,
         IFileSystemService fileSystemService,
         IDialogService dialogService,
+        IUpdateService updateService,
         IProcessHelper processHelper,
         Func<Window, IToastService> toastServiceFunc,
         IViewService viewService
@@ -73,6 +75,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         _modService = modService;
         _fileSystemService = fileSystemService;
         _dialogService = dialogService;
+        _updateService = updateService;
         _processHelper = processHelper;
         _toastServiceFunc = toastServiceFunc;
         _viewService = viewService;
@@ -101,7 +104,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         BrowseClusterDirOverrideCommand = CreateBasedCommand(new ActionCommand(ExecuteBrowseClusterDirOverrideCommand));
 
         DonateCommand = new ActionCommand(ExecuteDonateCommand);
-        CheckForUpdatesCommand = new ActionCommand(ExecuteCheckForUpdatesCommand);
+        CheckForAppUpdatesCommand = new ActionCommand(ExecuteCheckForAppUpdatesCommand);
         OpenFAQCommand = new ActionCommand(ExecuteOpenFAQCommand);
 
         var serverBackupCommand = new ActionCommand(async () => await ExecuteServerBackupCommandAsync().ConfigureAwait(false), CanExecuteRunServerBackupCommand)
@@ -109,10 +112,10 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
         ServerBackupCommand = CreateBasedCommand(serverBackupCommand);
 
-        var updateCommand = new ActionCommand(async () => await ExecuteUpdateCommandAsync().ConfigureAwait(false), CanExecuteUpdateCommand)
+        var updateServerCommand = new ActionCommand(async () => await ExecuteUpdateServerCommandAsync().ConfigureAwait(false), CanExecuteUpdateServerCommand)
             .ObservesProperty(() => CanUpdateServer);
 
-        UpdateCommand = CreateBasedCommand(updateCommand);
+        UpdateServerCommand = CreateBasedCommand(updateServerCommand);
 
         var runCommand = new ActionCommand(async () => await ExecuteRunServerCommandAsync().ConfigureAwait(false), CanExecuteRunServerCommand)
             .ObservesProperty(() => CanRunServer)
@@ -157,7 +160,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public bool CanUpdateServer => _serverHelper.CanUpdateServer;
 
-    public ICommand CheckForUpdatesCommand { get; }
+    public ICommand CheckForAppUpdatesCommand { get; }
 
     public IServerProfile CurrentProfile => _serverProfileService.CurrentProfile;
 
@@ -227,7 +230,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public ICommand SortListViewCommand { get; }
 
-    public ICommand UpdateCommand { get; }
+    public ICommand UpdateServerCommand { get; }
 
     public string WindowTitle =>
         _serverProfileService.CurrentFileName.IsNullOrWhiteSpace()
@@ -308,7 +311,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     private bool CanExecuteRunServerCommand() => ProfileIsValid && CanRunServer;
 
-    private bool CanExecuteUpdateCommand() => CanUpdateServer;
+    private bool CanExecuteUpdateServerCommand() => CanUpdateServer;
 
     private void ExecuteBrowseClusterDirOverrideCommand()
     {
@@ -323,7 +326,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         }
     }
 
-    private void ExecuteCheckForUpdatesCommand() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/releases");
+    private void ExecuteCheckForAppUpdatesCommand() => _updateService.CheckForUpdates(true, true, _toastService);
 
     private void ExecuteDonateCommand()
     {
@@ -457,12 +460,10 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         _lastDirection = direction;
     }
 
-    private async Task ExecuteUpdateCommandAsync()
+    private async Task ExecuteUpdateServerCommandAsync()
     {
-        if (!CanExecuteUpdateCommand())
+        if (!CanExecuteUpdateServerCommand())
             return;
-
-        //using var token = _isBusyHelper.GetToken();
 
         await _serverHelper.UpdateServerAsync().ConfigureAwait(false);
     }

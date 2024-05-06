@@ -31,7 +31,7 @@
         <KeyBinding Key="F1" Command="{Binding OpenFAQCommand}" />
 
         <KeyBinding Key="F5" Command="{Binding RunServerCommand}" />
-        <KeyBinding Key="F4" Command="{Binding UpdateCommand}" />
+        <KeyBinding Key="F4" Command="{Binding UpdateServerCommand}" />
         <KeyBinding Key="F6" Command="{Binding ServerBackupCommand}" />
 
         <KeyBinding Key="F9" Command="{Binding ShowSettingsCommand}" />
@@ -268,7 +268,7 @@
 
                     <MenuItem
                         Header="Update ASA Server"
-                        Command="{Binding UpdateCommand}"
+                        Command="{Binding UpdateServerCommand}"
                         InputGestureText="F4"
                         Visibility="{Binding ShowUpdateCommand, Converter={converters:BooleanToVisibilityConverter}}">
 
@@ -351,7 +351,7 @@
 
                 <MenuItem
                     Header="Check for _Updates"
-                    Command="{Binding CheckForUpdatesCommand}">
+                    Command="{Binding CheckForAppUpdatesCommand}">
 
                     <MenuItem.Icon>
                         <Image Source="/Resources/Icons/Update.png" />
