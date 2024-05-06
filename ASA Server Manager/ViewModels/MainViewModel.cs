@@ -33,6 +33,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     private readonly IProcessHelper _processHelper;
     private readonly IServerHelper _serverHelper;
     private readonly IServerProfileService _serverProfileService;
+    private readonly Func<Window, IToastService> _toastServiceFunc;
     private readonly IViewService _viewService;
     private IDisposable _commandToken;
     private CompositeDisposable _currentProfileSubscriptions;
@@ -44,6 +45,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     private CompositeDisposable _modSubscriptions;
     private SelectableMod _selectedMod;
     private CompositeDisposable _subscriptions;
+    private IToastService _toastService;
 
     #endregion
 
@@ -59,6 +61,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         IFileSystemService fileSystemService,
         IDialogService dialogService,
         IProcessHelper processHelper,
+        Func<Window, IToastService> toastServiceFunc,
         IViewService viewService
     )
     {
@@ -71,6 +74,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         _fileSystemService = fileSystemService;
         _dialogService = dialogService;
         _processHelper = processHelper;
+        _toastServiceFunc = toastServiceFunc;
         _viewService = viewService;
 
         _isBusyHelper = new TokenHelper(_ => RaisePropertyChanged(nameof(IsBusy)));
@@ -242,6 +246,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     protected override void OnLoad()
     {
+        _toastService = _toastServiceFunc(_viewService.GetWindow(this));
+
         _subscriptions =
         [
             _serverProfileService
@@ -286,13 +292,12 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     protected override void OnUnload()
     {
+        _serverHelper.StopServerMonitor();
+
         DisposeField(ref _subscriptions);
         DisposeField(ref _currentProfileSubscriptions);
         DisposeField(ref _modSubscriptions);
-
-        _serverHelper.StopServerMonitor();
-
-        ForceSaveProfile();
+        DisposeField(ref _toastService);
     }
 
     #endregion
@@ -358,12 +363,14 @@ public class MainViewModel : WindowViewModel, IMainViewModel
             );
         }
 
-        if (!fileName.IsNullOrWhiteSpace())
-        {
-            _serverProfileService.LoadProfile(fileName);
+        if (fileName.IsNullOrWhiteSpace())
+            return;
 
-            RefreshModList();
-        }
+        _serverProfileService.LoadProfile(fileName);
+
+        RefreshModList();
+
+        _toastService.ShowSuccess($"Profile '{_fileSystemService.GetFileNameWithoutExtension(_serverProfileService.CurrentFileName)}' loaded.");
     }
 
     private void ExecuteOpenFAQCommand() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/README.md#FAQ");
@@ -381,7 +388,11 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         if (!CanExecuteRunServerBackupCommand())
             return;
 
-        await _serverHelper.RunBackupExecutable().ConfigureAwait(false);
+        var task = _serverHelper.RunBackupExecutable();
+
+        _toastService.ShowInformation("Running backup executable.");
+
+        await task.ConfigureAwait(false);
     }
 
     private void ExecuteShowAboutWindowCommand()
@@ -397,6 +408,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
             return;
 
         RefreshModList();
+
+        _toastService.ShowSuccess("Available mods updated.");
     }
 
     private void ExecuteShowCustomMapsCommand()
@@ -411,13 +424,20 @@ public class MainViewModel : WindowViewModel, IMainViewModel
             nameof(SelectedMap),
             nameof(ProfileIsValid)
         );
+
+        _toastService.ShowSuccess("Custom maps updated.");
     }
 
     private void ExecuteShowSettingsCommand()
     {
-        _viewService.ShowViewDialog<ISettingsViewModel>(startupLocation: WindowStartupLocation.CenterOwner, owner: this);
+        var result = _viewService.ShowViewDialog<ISettingsViewModel>(startupLocation: WindowStartupLocation.CenterOwner, owner: this);
+
+        if (result != true)
+            return;
 
         RaisePropertiesChanged(nameof(ShowUpdateCommand), nameof(ShowModIDColumn));
+
+        _toastService.ShowSuccess("Settings saved.");
     }
 
     private void ExecuteSortListViewCommand(string sortBy)

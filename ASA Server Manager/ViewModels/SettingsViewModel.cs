@@ -23,6 +23,8 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     private readonly TokenHelper _isBusyHelper;
     private readonly IProgress<double> _progress;
     private readonly IServerHelper _serverHelper;
+    private readonly Func<Window, IToastService> _toastServiceFunc;
+    private readonly IViewService _viewService;
     private bool _autoSaveProfile;
     private string _backupExecutablePath;
     private string _busyMessage;
@@ -35,6 +37,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     private bool _showModIDColumn;
     private string _steamCmdPath;
     private bool _updateOnFirstRun;
+    private IToastService _toastService;
 
     #endregion
 
@@ -45,6 +48,8 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         IAppSettingsService appSettingsService,
         IFileSystemService fileSystemService,
         IServerHelper serverHelper,
+        Func<Window, IToastService> toastServiceFunc,
+        IViewService viewService,
         IDialogService dialogService
     )
     {
@@ -52,6 +57,8 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         _appSettingsService = appSettingsService;
         _fileSystemService = fileSystemService;
         _serverHelper = serverHelper;
+        _toastServiceFunc = toastServiceFunc;
+        _viewService = viewService;
         _dialogService = dialogService;
 
         _isBusyHelper = new TokenHelper(_ => RaisePropertyChanged(nameof(IsBusy)));
@@ -64,7 +71,6 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
             .ObservesProperty(() => SelectedServerType)
             .ObservesProperty(() => SteamCmdPath)
             .ObservesProperty(() => ServerPath);
-        ;
 
         BrowseFileCommand = CreateBasedCommand(new ActionCommand<FilePathEnum>(ExecuteBrowseFileCommand));
 
@@ -190,6 +196,8 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
 
     protected override void OnLoad()
     {
+        _toastService = _toastServiceFunc(_viewService.GetWindow(this));
+
         AutoSaveProfile = _appSettingsService.AutoSaveProfile;
         BackupExecutablePath = _appSettingsService.BackupExecutablePath;
         RecentProfilesLimit = _appSettingsService.RecentProfilesLimit;
@@ -202,6 +210,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
 
     protected override void OnUnload()
     {
+        DisposeField(ref _toastService);
     }
 
     #endregion
@@ -271,7 +280,10 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         var result = _dialogService.ShowMessage(Message, Title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
         if (result != MessageBoxResult.Yes)
+        {
+            _toastService.ShowWarning("Installation canceled: User declined.");
             return;
+        }
 
         string arkServerPath = null;
 
@@ -281,7 +293,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
 
             if (dir.IsNullOrWhiteSpace())
             {
-                _dialogService.ShowMessage("Installation canceled: No folder selected.", Title);
+                _toastService.ShowWarning("Installation canceled: No folder selected.");
                 return;
             }
 
@@ -311,11 +323,11 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
 
         if (arkServerPath.IsNullOrWhiteSpace() || !_fileSystemService.FileExists(arkServerPath))
         {
-            _dialogService.ShowErrorMessage("Ark Survival Ascended server executable not found!\r\n\r\nIf you did not cancel the installation, you may need to manually install it!", Title);
+            _toastService.ShowError("Error installing server!\r\nTry again, or manually install it!");
         }
         else
         {
-            _dialogService.ShowMessage("SteamCMD has been installed.\r\n\r\nNote: You may need to run the server first before the save folder and .ini files are generated!", Title, icon: MessageBoxImage.Information);
+            _toastService.ShowSuccess("Server installed.\r\nNote: Save folder & .ini files are generated on first run.");
         }
 
         return;
