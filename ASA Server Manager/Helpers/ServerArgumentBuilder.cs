@@ -44,7 +44,7 @@ public class ServerArgumentBuilder
 
         // Cluster & Transfer Settings
         AddOption("clusterid", profile.ClusterID);
-        AddOption("ClusterDirOverride", $"\"{profile.ClusterDirOverride.Trim('\"')}\"".Trim('\"'));
+        AddOption("ClusterDirOverride", $"\"{profile.ClusterDirOverride?.Trim('\"')}\"".Trim('\"'));
         AddOption("MaxTributeDinos", profile.MaxTributeDinos);
         AddOption("MaxTributeItems", profile.MaxTributeItems);
         AddOption(profile.NoTransferFromFiltering, "NoTransferFromFiltering");
