@@ -115,9 +115,27 @@ Ensure the server is running and the ports are open on your network. You may nee
 For any other assistance, please refer to the [Ark Server Configuration Wiki](https://ark.wiki.gg/wiki/Server_configuration).
 
 ### How do I update ASA Server Manager?
-For now, you will need to manually check the [GitHub](https://github.com/Grahamvs/ASA-Server-Manager/releases) for the latest version and download it.
+You will need to download the latest version from [GitHub](https://github.com/Grahamvs/ASA-Server-Manager/releases). Once downloaded, unzip the executable and overwrite the previous version.
 
-Future versions will include an automatic notification to alert users of new versions.
+### How do I know if there is a new version available?
+The tool will automatically check for updates based on your update settings (the default is only on start up). If a new version is available, a notification will appear in the bottom right corner of the window. You can also check for updates manually by clicking the "Check for Updates" option in the "Help" menu.
+
+### I don't like the new version, how do I go back to the previous version?
+You can download the a previous version, then you can either disable update notifications entirely, or simply set the latest version to be ignored.
+
+### How do I disable update notifications?
+You can disable update notifications by clicking the "Options" menu, then setting the "Check for App Updates" option to none. Finally, click the "Save" button to save the changes and close the window.
+
+### How do I ignore the latest version?
+When the update notification appears, click the Close button on the notification. A dialogue box will appear asking if you want to ignore the specific version. Click "Yes" to ignore the version.
+
+Note: Ignoring the latest version will only ignore the current version. If a new version is released, you will be notified of that version.
+
+### I previously ignored the latest version, how do I update to it now?
+You can force a check for the latest version by clicking the "Check for Updates" option in the "Help" menu. The tool will check for updates and notify you if a new version is available.
+
+### Can I run ASA Server Manager on a Linux or Mac system?
+Maybe. The tool is developed for Windows, however, there are ways to run Windows applications on Linux and Mac systems. One such way is to use [Wine](https://www.winehq.org/). Please note that the developer(s) have not tested the tool on Linux or Mac systems, so it may not work as expected.
 
 ### Which mods do you recommend?
 The mods you choose to use are entirely up to you, however, I personally recommended the following:
