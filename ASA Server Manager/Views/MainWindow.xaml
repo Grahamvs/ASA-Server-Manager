@@ -614,7 +614,7 @@
                         <!-- RCON Port -->
                         <controls:SettingsControl
                             Label="RCON Port:"
-                            InfoText="Specifies the optional TCP RCON Port.">
+                            InfoText="Specifies the optional TCP RCON Port.&#x0a;&#x0a;This cannot be the same as the Port or QueryPort.&#x0a;Range is between 1024 and 49151.">
                             <controls:NumericSpinner
                                 MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
                                 MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
@@ -666,7 +666,7 @@
                         <!-- Port -->
                         <controls:SettingsControl
                             Label="Port:"
-                            InfoText="This is the server port used to host the dedicated server on.">
+                            InfoText="This is the server port used to host the dedicated server on.&#x0a;&#x0a;This cannot be the same as the QueryPort or RCON Port.&#x0a;Range is between 1024 and 49151.">
                             <controls:NumericSpinner
                                 MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
                                 MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
@@ -677,7 +677,7 @@
                         <!-- Query Port -->
                         <controls:SettingsControl
                             Label="Query Port:"
-                            InfoText="Specifies the UDP Steam Query Port">
+                            InfoText="Specifies the UDP Steam Query Port.&#x0a;&#x0a;This cannot be the same as the Port or RCON Port.&#x0a;Range is between 1024 and 49151.">
                             <controls:NumericSpinner
                                 MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
                                 MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
@@ -746,7 +746,7 @@
                             InfoText="Enable server admin logs (including support in the RCON)">
                             <CheckBox IsChecked="{Binding CurrentProfile.ServerGameLogIncludeTribeLogs}" />
                         </controls:SettingsControl>
-                       
+
                     </StackPanel>
 
                 </Expander>
