@@ -4,10 +4,14 @@ on:
   push:
     branches: [ "main" ]
     paths-ignore:
-      - 'readme.md'
+      - 'README.md'
+      - 'FAQ.md'
+      - 'LICENSE'
       - '*.yml'
       - '.gitignore'
       - '.editorconfig'
+      - 'ScreenShots/**'
+      - 'CodeMaid.config'
   workflow_dispatch:
 
 jobs:
