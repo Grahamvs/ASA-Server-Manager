@@ -40,7 +40,7 @@ The tool is still under development, so it may contain bugs or lack certain opti
 The FAQ has been moved to [here](https://github.com/Grahamvs/ASA-Server-Manager/blob/main/FAQ.md).
 
 ## Contributing
-Contributions to the project are welcome. You can submit pull requests or bug reports on the project's [GitHub](https://github.com/Grahamvs/ASA-Server-Manager) page. If you're feeling generous, you can also support the project by buying me a coffee via [PayPal.me](https://paypal.me/grahamvs87). There is also a "Donte" menu item under the tool's "Help" menu that will open the PayPal.me link.
+Contributions to the project are welcome. You can submit pull requests or bug reports on the project's [GitHub](https://github.com/Grahamvs/ASA-Server-Manager) page. If you're feeling generous, you can also support the project by buying me a coffee via [PayPal.me](https://paypal.me/grahamvs87). There is also a "Donate" menu item under the tool's "Help" menu that will open the PayPal.me link.
 
 
 ## Disclaimer
@@ -48,7 +48,7 @@ This software is a work in progress, so use it at your own risk. The developer(s
 
 The developer(s) are no way affiliated with Steam, SteamCMD, the game's developers or publishers.
 
-The developer(s) are also not repsonsible in the event you miss important events (such as the birth of your child, your wedding, spouse's birthday, etc), or having your spouse leave you due to you playing too much ASA. Please remember to take frequent breaks and don't forget to feed and spend time with your pets and loved ones.
+The developer(s) are also not responsible in the event you miss important events (such as the birth of your child, your wedding, spouse's birthday, etc), or having your spouse leave you due to you playing too much ASA. Please remember to take frequent breaks and don't forget to feed and spend time with your pets and loved ones.
 
 
 ## License
