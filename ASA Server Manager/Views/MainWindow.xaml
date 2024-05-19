@@ -89,7 +89,7 @@
 
         <Style TargetType="controls:NumericSpinner">
             <Setter Property="Margin" Value="5" />
-            <Setter Property="Width" Value="70" />
+            <Setter Property="Width" Value="80" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="Step" Value="1" />
             <Setter Property="Decimals" Value="0" />
