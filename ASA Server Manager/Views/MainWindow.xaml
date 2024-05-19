@@ -735,19 +735,29 @@
                             InfoText="Enable server admin logs (including support in the RCON)">
                             <CheckBox IsChecked="{Binding CurrentProfile.ServerGameLogIncludeTribeLogs}" />
                         </controls:SettingsControl>
-
-                        <!-- Additional Arguments -->
-                        <controls:SettingsControl
-                            Label="Additional Arguments:"
-                            InfoText="Any additional server options can be added here.">
-                            <TextBox
-                                VerticalAlignment="Center"
-                                Text="{Binding CurrentProfile.AdditionalArguments}" />
-                        </controls:SettingsControl>
-
-
+                       
                     </StackPanel>
 
+                </Expander>
+
+                <!-- Additional Arguments -->
+                <Expander
+                    IsExpanded="False"
+                    Header="Additional Arguments">
+                    <StackPanel>
+
+                        <TextBlock
+                            TextWrapping="WrapWithOverflow"
+                            Margin="5"
+                            Text="Any additional server arguments can be added here, and will be passed to the server as is after the mods." />
+
+                        <TextBox
+                            VerticalAlignment="Center"
+                            AcceptsReturn="False"
+                            MinLines="3"
+                            Text="{Binding CurrentProfile.AdditionalArguments}" />
+
+                    </StackPanel>
                 </Expander>
 
                 <!-- Mod List -->
