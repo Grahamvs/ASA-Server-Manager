@@ -379,7 +379,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         _toastService.ShowSuccess($"Profile '{_fileSystemService.GetFileNameWithoutExtension(_serverProfileService.CurrentFileName)}' loaded.");
     }
 
-    private void ExecuteOpenFAQCommand() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/README.md#FAQ");
+    private void ExecuteOpenFAQCommand() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/FAQ.md");
 
     private void ExecuteOpenWikiCommand() => _processHelper.OpenWeblink("https://ark.wiki.gg/wiki/Server_configuration");
 
