@@ -29,10 +29,10 @@
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
         <KeyBinding Key="S" Modifiers="Control+Shift" Command="{Binding SaveAsCommand}" />
 
-        <KeyBinding Key="F1" Command="{Binding OpenFAQCommand}" />
+        <KeyBinding Key="F1" Command="{Binding OpenWikiCommand}" />
 
-        <KeyBinding Key="F5" Command="{Binding RunServerCommand}" />
         <KeyBinding Key="F4" Command="{Binding UpdateServerCommand}" />
+        <KeyBinding Key="F5" Command="{Binding RunServerCommand}" />
         <KeyBinding Key="F6" Command="{Binding ServerBackupCommand}" />
 
         <KeyBinding Key="F9" Command="{Binding ShowSettingsCommand}" />
@@ -342,11 +342,21 @@
             <MenuItem Header="_Help">
 
                 <MenuItem
-                    Header="_Donate"
-                    Command="{Binding DonateCommand}">
+                    Header="Server Config _Wiki"
+                    Command="{Binding OpenFAQCommand}"
+                    InputGestureText="F1">
 
                     <MenuItem.Icon>
-                        <Image Source="/Resources/Icons/PayPal.png" />
+                        <Image Source="/Resources/Icons/Help.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem
+                    Header="_FAQ"
+                    Command="{Binding OpenFAQCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Help.png" />
                     </MenuItem.Icon>
                 </MenuItem>
 
@@ -359,13 +369,14 @@
                     </MenuItem.Icon>
                 </MenuItem>
 
+                <Separator />
+
                 <MenuItem
-                    Header="_FAQ"
-                    Command="{Binding OpenFAQCommand}"
-                    InputGestureText="F1">
+                    Header="_Donate"
+                    Command="{Binding DonateCommand}">
 
                     <MenuItem.Icon>
-                        <Image Source="/Resources/Icons/Help.png" />
+                        <Image Source="/Resources/Icons/PayPal.png" />
                     </MenuItem.Icon>
                 </MenuItem>
 
@@ -377,7 +388,6 @@
                     <MenuItem.Icon>
                         <Image Source="/Resources/Icons/Info.png" />
                     </MenuItem.Icon>
-
                 </MenuItem>
 
             </MenuItem>

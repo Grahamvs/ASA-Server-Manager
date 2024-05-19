@@ -106,6 +106,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         DonateCommand = new ActionCommand(ExecuteDonateCommand);
         CheckForAppUpdatesCommand = new ActionCommand(ExecuteCheckForAppUpdatesCommand);
         OpenFAQCommand = new ActionCommand(ExecuteOpenFAQCommand);
+        OpenWikiCommand = new ActionCommand(ExecuteOpenWikiCommand);
 
         var serverBackupCommand = new ActionCommand(async () => await ExecuteServerBackupCommandAsync().ConfigureAwait(false), CanExecuteRunServerBackupCommand)
             .ObservesProperty(() => CanRunServerBackup);
@@ -183,6 +184,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     public ICommand NewProfileCommand { get; }
 
     public ICommand OpenFAQCommand { get; }
+
+    public ICommand OpenWikiCommand { get; }
 
     public ICommand OpenFolderCommand => _serverHelper.OpenFolderCommand;
 
@@ -377,6 +380,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     }
 
     private void ExecuteOpenFAQCommand() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/README.md#FAQ");
+
+    private void ExecuteOpenWikiCommand() => _processHelper.OpenWeblink("https://ark.wiki.gg/wiki/Server_configuration");
 
     private async Task ExecuteRunServerCommandAsync()
     {
