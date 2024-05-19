@@ -18,6 +18,7 @@
     mc:Ignorable="d"
     Title="{Binding WindowTitle}"
     Height="900"
+    MinWidth="400"
     Width="650"
     WindowStartupLocation="CenterScreen"
     d:DataContext="{d:DesignInstance viewModels:MainViewModel}">
