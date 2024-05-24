@@ -261,6 +261,36 @@
 
                 </MenuItem>
 
+                <MenuItem Header="Open Config">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/Document_White_Edit.png" />
+                    </MenuItem.Icon>
+
+                    <MenuItem
+                        Header="GameUserSettings.ini"
+                        Command="{Binding OpenIniFileCommand}"
+                        CommandParameter="{x:Static enums:IniFiles.GUS}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Document_White_Edit.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="Game.ini"
+                        Command="{Binding OpenIniFileCommand}"
+                        CommandParameter="{x:Static enums:IniFiles.Game}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Document_White_Edit.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                </MenuItem>
+
                 <MenuItem Header="_Execute">
 
                     <MenuItem.Icon>

@@ -189,6 +189,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public ICommand OpenFolderCommand => _serverHelper.OpenFolderCommand;
 
+    public ICommand OpenIniFileCommand => _serverHelper.OpenIniFileCommand;
+
     public bool ProfileIsValid =>
         (CurrentProfile?.IsValid ?? false)
         && SelectedMap != null;
