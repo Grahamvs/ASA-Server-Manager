@@ -19,6 +19,8 @@ public interface IServerHelper : INotifyPropertyChanged
 
     ICommand<ServerFolders> OpenFolderCommand { get; }
 
+    ICommand<IniFiles> OpenIniFileCommand { get; }
+
     bool SteamCmdPathIsValid { get; }
 
     bool UpdatingServer { get; }

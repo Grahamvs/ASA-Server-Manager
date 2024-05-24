@@ -60,6 +60,9 @@ public class ServerHelper : BindableBase, IServerHelper
         var openFolderCommand = new ActionCommand<ServerFolders>(ExecuteOpenFolderCommand, folder => GetFolder(folder).Exists);
         OpenFolderCommand = openFolderCommand;
 
+        var openIniFileCommand = new ActionCommand<IniFiles>(ExecuteOpenIniFileCommand);
+        OpenIniFileCommand = openIniFileCommand;
+
         _appSettingsService
             .FromPropertyChangedPattern()
             .WherePropertyIs(nameof(IAppSettingsService.SteamCmdPath))
@@ -89,6 +92,15 @@ public class ServerHelper : BindableBase, IServerHelper
             )
             .Sample(TimeSpan.FromMilliseconds(300))
             .Subscribe(_ => openFolderCommand.RaiseCanExecuteChanged());
+
+        _appSettingsService
+            .FromPropertyChangedPattern()
+            .WherePropertiesAre(
+                nameof(IAppSettings.SteamCmdPath),
+                nameof(IAppSettings.ServerPath)
+            )
+            .Sample(TimeSpan.FromMilliseconds(300))
+            .Subscribe(_ => openIniFileCommand.RaiseCanExecuteChanged());
 
         _workingDirectory = applicationService.WorkingDirectory;
 
@@ -127,6 +139,8 @@ public class ServerHelper : BindableBase, IServerHelper
         && !ServerRunning;
 
     public ICommand<ServerFolders> OpenFolderCommand { get; }
+
+    public ICommand<IniFiles> OpenIniFileCommand { get; }
 
     public bool SteamCmdPathIsValid => IsFileValid(SteamCmdPath);
 
@@ -287,6 +301,48 @@ public class ServerHelper : BindableBase, IServerHelper
         }
 
         _processHelper.CreateProcess("Explorer.exe", dir).Start();
+    }
+
+    private void ExecuteOpenIniFileCommand(IniFiles iniFile)
+    {
+        string fileName;
+        string folder = null;
+        bool exists;
+
+        switch (iniFile)
+        {
+            case IniFiles.GUS:
+            case IniFiles.Game:
+
+                (var saveFolder, exists) = GetFolder(ServerFolders.ServerSave);
+
+                if (exists)
+                {
+                    folder = _fileSystemService.Combine(
+                        saveFolder,
+                        "Config",
+                        "WindowsServer"
+                    );
+                }
+
+                fileName = iniFile == IniFiles.GUS ? "GameUserSettings.ini" : "Game.ini";
+
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(iniFile), iniFile, null);
+        }
+
+        if (!exists)
+        {
+            var message = $"Cannot find \"{fileName}\"!\r\n\r\nPlease ensure your server paths are correct, and that you have run the server at least once!";
+            _dialogService.ShowErrorMessage(message);
+            return;
+        }
+
+        var iniFilePath = _fileSystemService.Combine(folder, fileName);
+
+        _processHelper.RunWithShellExecute(iniFilePath);
     }
 
     private string GetParentFolder(string path, string relativeTo)
