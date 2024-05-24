@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using System.Windows.Input;
 using ASA_Server_Manager.Enums;
+using ASA_Server_Manager.Interfaces.Common.Commands;
 using ASA_Server_Manager.Interfaces.Configs;
 
 namespace ASA_Server_Manager.Interfaces.Helpers;
@@ -17,7 +17,7 @@ public interface IServerHelper : INotifyPropertyChanged
 
     bool CanUpdateServer { get; }
 
-    ICommand OpenFolderCommand { get; }
+    ICommand<ServerFolders> OpenFolderCommand { get; }
 
     bool SteamCmdPathIsValid { get; }
 

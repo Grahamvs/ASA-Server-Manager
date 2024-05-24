@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Reactive.Linq;
-using System.Windows.Input;
 using ASA_Server_Manager.Common;
 using ASA_Server_Manager.Common.Commands;
 using ASA_Server_Manager.Configs;
 using ASA_Server_Manager.Enums;
 using ASA_Server_Manager.Extensions;
+using ASA_Server_Manager.Interfaces.Common.Commands;
 using ASA_Server_Manager.Interfaces.Configs;
 using ASA_Server_Manager.Interfaces.Helpers;
 using ASA_Server_Manager.Interfaces.Services;
@@ -116,7 +116,7 @@ public class ServerHelper : BindableBase, IServerHelper
         && !BackingUpServer
         && !ServerRunning;
 
-    public ICommand OpenFolderCommand { get; }
+    public ICommand<ServerFolders> OpenFolderCommand { get; }
 
     public bool SteamCmdPathIsValid => IsFileValid(SteamCmdPath);
 
