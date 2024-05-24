@@ -185,11 +185,11 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public ICommand OpenFAQCommand { get; }
 
-    public ICommand OpenWikiCommand { get; }
-
     public ICommand OpenFolderCommand => _serverHelper.OpenFolderCommand;
 
     public ICommand OpenIniFileCommand => _serverHelper.OpenIniFileCommand;
+
+    public ICommand OpenWikiCommand { get; }
 
     public bool ProfileIsValid =>
         (CurrentProfile?.IsValid ?? false)

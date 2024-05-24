@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows.Navigation;
+﻿using System.Windows.Navigation;
 
 namespace ASA_Server_Manager.Views;
 
