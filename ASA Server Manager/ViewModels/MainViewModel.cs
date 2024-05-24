@@ -388,6 +388,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         if (!CanExecuteRunServerCommand())
             return;
 
+        using var token = _isBusyHelper.GetToken();
         await _serverHelper.RunServerAsync(CurrentProfile).ConfigureAwait(false);
     }
 
