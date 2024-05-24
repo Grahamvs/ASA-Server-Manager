@@ -11,11 +11,7 @@ public interface IActionCommand : IActionCommandBase
     IActionCommand ObservesProperty<TType>(Expression<Func<TType>> propertyExpression);
 }
 
-public interface IActionCommand<T> : IActionCommandBase
+public interface IActionCommand<T> : ICommand<T>
 {
-    bool CanExecute(T parameter);
-
-    void Execute(T parameter);
-
     IActionCommand<T> ObservesProperty<TType>(Expression<Func<TType>> propertyExpression);
 }
