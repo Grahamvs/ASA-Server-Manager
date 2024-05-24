@@ -25,6 +25,7 @@
 		<None Remove="Resources\Icons\Checkbox_Unchecked.png" />
 		<None Remove="Resources\Icons\Delete.png" />
 		<None Remove="Resources\Icons\Document_White.png" />
+		<None Remove="Resources\Icons\Document_White_Edit.png" />
 		<None Remove="Resources\Icons\Document_White_Open.png" />
 		<None Remove="Resources\Icons\File_Explorer.png" />
 		<None Remove="Resources\Icons\Folder.png" />
@@ -73,6 +74,7 @@
 		<Resource Include="Resources\Icons\Checkbox_Unchecked.png" />
 		<Resource Include="Resources\Icons\Delete.png" />
 		<Resource Include="Resources\Icons\Document_White.png" />
+		<Resource Include="Resources\Icons\Document_White_Edit.png" />
 		<Resource Include="Resources\Icons\Document_White_Open.png" />
 		<Resource Include="Resources\Icons\File_Explorer.png" />
 		<Resource Include="Resources\Icons\Folder.png" />
