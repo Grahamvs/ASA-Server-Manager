@@ -77,7 +77,17 @@ public class ServerHelper : BindableBase, IServerHelper
 
         _appSettingsService
             .FromPropertyChangedPattern()
-            .Sample(TimeSpan.FromMilliseconds(200))
+            .WherePropertiesAre(
+                nameof(IAppSettings.SteamCmdPath),
+                nameof(IAppSettings.ServerPath),
+                nameof(IAppSettings.BackupExecutablePath)
+            )
+            .Merge(
+                _serverProfileService
+                    .FromPropertyChangedPattern()
+                    .WherePropertiesAre(nameof(IServerProfileService.CurrentFilePath))
+            )
+            .Sample(TimeSpan.FromMilliseconds(300))
             .Subscribe(_ => openFolderCommand.RaiseCanExecuteChanged());
 
         _workingDirectory = applicationService.WorkingDirectory;
