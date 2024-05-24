@@ -47,5 +47,5 @@ public class AboutViewModel : WindowViewModel, IAboutViewModel
 
     #endregion
 
-    public void OpenWeblink(string url) => _processHelper.OpenWeblink(url);
+    public void OpenWeblink(string url) => _processHelper.RunWithShellExecute(url);
 }

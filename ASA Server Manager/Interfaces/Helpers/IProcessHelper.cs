@@ -21,5 +21,5 @@ public interface IProcessHelper
 
     IEnumerable<IProcess> GetProcessesByName(string name);
 
-    void OpenWeblink(string url);
+    void RunWithShellExecute(string path);
 }

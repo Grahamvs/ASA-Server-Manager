@@ -100,7 +100,7 @@ public class UpdateService : IUpdateService
 
         //// Local Functions \\\\
 
-        void LaunchLatestRelease() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/releases/latest");
+        void LaunchLatestRelease() => _processHelper.RunWithShellExecute("https://github.com/Grahamvs/ASA-Server-Manager/releases/latest");
 
         void IgnoreLatestRelease()
         {

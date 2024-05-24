@@ -340,7 +340,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         if (result != MessageBoxResult.Yes)
             return;
 
-        _processHelper.OpenWeblink("https://www.paypal.me/slayerice09");
+        _processHelper.RunWithShellExecute("https://www.paypal.me/slayerice09");
     }
 
     private void ExecuteLoadProfileCommand(CommandParameter parameter)
@@ -379,9 +379,9 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         _toastService.ShowSuccess($"Profile '{_fileSystemService.GetFileNameWithoutExtension(_serverProfileService.CurrentFileName)}' loaded.");
     }
 
-    private void ExecuteOpenFAQCommand() => _processHelper.OpenWeblink("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/FAQ.md");
+    private void ExecuteOpenFAQCommand() => _processHelper.RunWithShellExecute("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/FAQ.md");
 
-    private void ExecuteOpenWikiCommand() => _processHelper.OpenWeblink("https://ark.wiki.gg/wiki/Server_configuration");
+    private void ExecuteOpenWikiCommand() => _processHelper.RunWithShellExecute("https://ark.wiki.gg/wiki/Server_configuration");
 
     private async Task ExecuteRunServerCommandAsync()
     {

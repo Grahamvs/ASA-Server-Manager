@@ -23,13 +23,10 @@ public class ProcessHelper : IProcessHelper
 
     public IEnumerable<IProcess> GetProcessesByName(string name) => Process.GetProcessesByName(name).Select(p => new ProcessWrapper(p));
 
-    public void OpenWeblink(string url)
+    public void RunWithShellExecute(string path)
     {
-        var info = new ProcessStartInfo(url) { UseShellExecute = true };
+        var info = new ProcessStartInfo(path) { UseShellExecute = true };
 
-        var process = new Process();
-        process.StartInfo = info;
-
-        process.Start();
+        new Process { StartInfo = info }.Start();
     }
 }
