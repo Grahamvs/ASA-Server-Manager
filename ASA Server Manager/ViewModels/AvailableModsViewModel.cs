@@ -131,8 +131,10 @@ public class AvailableModsViewModel : WindowViewModel, IAvailableModsViewModel
 
         var canMove = direction switch
         {
+            MoveDirection.Top => index > 0,
             MoveDirection.Up => index > 0,
             MoveDirection.Down => index < _availableModsList.Count - 1,
+            MoveDirection.Bottom => index < _availableModsList.Count - 1,
             _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
         };
 
@@ -150,8 +152,10 @@ public class AvailableModsViewModel : WindowViewModel, IAvailableModsViewModel
 
         var newIndex = direction switch
         {
+            MoveDirection.Top => 0,
             MoveDirection.Up => oldIndex - 1,
             MoveDirection.Down => oldIndex + 1,
+            MoveDirection.Bottom => _availableModsList.Count - 1,
             _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
         };
 

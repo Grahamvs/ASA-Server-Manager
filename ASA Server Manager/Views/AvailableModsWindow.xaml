@@ -95,6 +95,15 @@
                     <Button
                         Height="40"
                         Command="{Binding MoveSelectedItemCommand}"
+                        CommandParameter="{x:Static enums:MoveDirection.Top}">
+                        <Button.Content>
+                            <controls:AutoDisableImage Source="/Resources/Icons/Arrow_Collapse_Top.png" />
+                        </Button.Content>
+                    </Button>
+                    
+                    <Button
+                        Height="40"
+                        Command="{Binding MoveSelectedItemCommand}"
                         CommandParameter="{x:Static enums:MoveDirection.Up}">
                         <Button.Content>
                             <controls:AutoDisableImage Source="/Resources/Icons/Arrow_Collapse_Up.png" />
@@ -107,6 +116,15 @@
                         CommandParameter="{x:Static enums:MoveDirection.Down}">
                         <Button.Content>
                             <controls:AutoDisableImage Source="/Resources/Icons/Arrow_Collapse_Down.png" />
+                        </Button.Content>
+                    </Button>
+
+                    <Button
+                        Height="40"
+                        Command="{Binding MoveSelectedItemCommand}"
+                        CommandParameter="{x:Static enums:MoveDirection.Bottom}">
+                        <Button.Content>
+                            <controls:AutoDisableImage Source="/Resources/Icons/Arrow_Collapse_Bottom.png" />
                         </Button.Content>
                     </Button>
 

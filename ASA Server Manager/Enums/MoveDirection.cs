@@ -5,4 +5,6 @@ public enum MoveDirection
     None,
     Up,
     Down,
+    Top,
+    Bottom
 }
