@@ -16,7 +16,9 @@
 	<ItemGroup>
 		<None Remove="ASM.ico" />
 		<None Remove="Resources\Icons\Ark.png" />
+		<None Remove="Resources\Icons\Arrow_Collapse_Bottom.png" />
 		<None Remove="Resources\Icons\Arrow_Collapse_Down.png" />
+		<None Remove="Resources\Icons\Arrow_Collapse_Top.png" />
 		<None Remove="Resources\Icons\Arrow_Collapse_Up.png" />
 		<None Remove="Resources\Icons\Arrow_Double_Down.png" />
 		<None Remove="Resources\Icons\Arrow_Double_Up.png" />
@@ -65,7 +67,9 @@
 	<ItemGroup>
 		<Resource Include="ASM.ico" />
 		<Resource Include="Resources\Icons\Ark.png" />
+		<Resource Include="Resources\Icons\Arrow_Collapse_Bottom.png" />
 		<Resource Include="Resources\Icons\Arrow_Collapse_Down.png" />
+		<Resource Include="Resources\Icons\Arrow_Collapse_Top.png" />
 		<Resource Include="Resources\Icons\Arrow_Collapse_Up.png" />
 		<Resource Include="Resources\Icons\Arrow_Double_Down.png" />
 		<Resource Include="Resources\Icons\Arrow_Double_Up.png" />
