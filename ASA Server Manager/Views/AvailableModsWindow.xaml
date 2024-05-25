@@ -97,7 +97,7 @@
                         Command="{Binding MoveSelectedItemCommand}"
                         CommandParameter="{x:Static enums:MoveDirection.Up}">
                         <Button.Content>
-                            <Image Source="/Resources/Icons/Arrow_Collapse_Up.png" />
+                            <controls:AutoDisableImage Source="/Resources/Icons/Arrow_Collapse_Up.png" />
                         </Button.Content>
                     </Button>
 
@@ -106,7 +106,7 @@
                         Command="{Binding MoveSelectedItemCommand}"
                         CommandParameter="{x:Static enums:MoveDirection.Down}">
                         <Button.Content>
-                            <Image Source="/Resources/Icons/Arrow_Collapse_Down.png" />
+                            <controls:AutoDisableImage Source="/Resources/Icons/Arrow_Collapse_Down.png" />
                         </Button.Content>
                     </Button>
 
@@ -114,7 +114,7 @@
                         Height="40"
                         Command="{Binding DeleteCommand}">
                         <Button.Content>
-                            <Image Source="/Resources/Icons/Delete.png" />
+                            <controls:AutoDisableImage Source="/Resources/Icons/Delete.png" />
                         </Button.Content>
                     </Button>
 
