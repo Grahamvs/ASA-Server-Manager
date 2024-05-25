@@ -13,6 +13,14 @@
         <Setter Property="Icon" Value="pack://application:,,,/ASM.ico" />
     </Style>
 
+    <!-- Colours -->
+    <LinearGradientBrush x:Key="SelectedRowBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="LightBlue" Offset="0.0" />
+        <GradientStop Color="LightSkyBlue" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="SelectedRowForegroundBrush" Color="Black"/>
+
     <!-- Styles -->
     <Style TargetType="Button">
         <Setter Property="FontSize" Value="{DynamicResource NormalFontSize}" />
@@ -182,6 +190,24 @@
 
     <Style TargetType="ComboBox">
         <Setter Property="FontSize" Value="{DynamicResource NormalFontSize}" />
+    </Style>
+
+    <Style TargetType="DataGridCell">
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowForegroundBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="DataGridRow">
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowForegroundBrush}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>
