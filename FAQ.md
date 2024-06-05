@@ -36,7 +36,7 @@ This might change in the future to a more secure method, however, the current me
 ## What are mods, and how do I add them?
 Mods are user-created content that can enhance the gaming experience. The ASA Server Manager provides a user-created list of available mods that all profiles share. Each profile can be configured to enable any or all of the mods for the server.
 
-To add a new mod, open the "Options" menu and click on the "Available Mods" option. In the window that appears, you can choose to add or remove mods from the list. To add a mod, double-click the last row in the grid and set the ID and name. The ID is usually a 6 to 7 digit numerical value, which can be found on [CursedForge.com](https://www.curseforge.com/ark-survival-ascended). The description is optional, but can be used to add keywords to help when filtering. Once you've updated the mods list, click the "Save" button to save the changes and close the window.
+To add a new mod, open the "Options" menu and click on the "Available Mods" option. In the window that appears, you can choose to add or remove mods from the list. To add a mod, double-click the last row in the grid and set the ID and name. The ID is usually a 6 to 7 digit numerical value, which can be found on [CurseForge](https://www.curseforge.com/ark-survival-ascended). The description is optional, but can be used to add keywords to help when filtering. Once you've updated the mods list, click the "Save" button to save the changes and close the window.
 
 Note: Mods will be loaded in the order they appear in the available mods list. To change the load order, open the "Available Mods" window, select the desired mod, then use the up and down buttons to change its position in the list. Finally, click save.
 
