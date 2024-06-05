@@ -13,6 +13,7 @@ public class MapService : BindableBase, IMapService
     [
         new MapDetails {ID = "TheIsland_WP", Name = "The Island"},
         new MapDetails {ID = "ScorchedEarth_WP", Name = "Scorched Earth"},
+        new MapDetails {ID = "thecenter_wp", Name = "The Center"},
     ];
 
     private readonly IDialogService _dialogService;
