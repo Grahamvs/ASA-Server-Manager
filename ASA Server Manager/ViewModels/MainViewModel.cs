@@ -105,6 +105,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
         DonateCommand = new ActionCommand(ExecuteDonateCommand);
         CheckForAppUpdatesCommand = new ActionCommand(ExecuteCheckForAppUpdatesCommand);
+
+        OpenCurseForgeCommand = new ActionCommand(ExecuteOpenCurseForgeCommand);
         OpenFAQCommand = new ActionCommand(ExecuteOpenFAQCommand);
         OpenWikiCommand = new ActionCommand(ExecuteOpenWikiCommand);
 
@@ -182,6 +184,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     public ICollectionView ModListView => _modListView;
 
     public ICommand NewProfileCommand { get; }
+
+    public ICommand OpenCurseForgeCommand { get; }
 
     public ICommand OpenFAQCommand { get; }
 
@@ -380,6 +384,8 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
         _toastService.ShowSuccess($"Profile '{_fileSystemService.GetFileNameWithoutExtension(_serverProfileService.CurrentFileName)}' loaded.");
     }
+
+    private void ExecuteOpenCurseForgeCommand() => _processHelper.RunWithShellExecute("https://www.curseforge.com/ark-survival-ascended");
 
     private void ExecuteOpenFAQCommand() => _processHelper.RunWithShellExecute("https://github.com/Grahamvs/ASA-Server-Manager/blob/main/FAQ.md");
 

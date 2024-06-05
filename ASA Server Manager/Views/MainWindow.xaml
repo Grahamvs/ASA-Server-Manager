@@ -391,6 +391,15 @@
                 </MenuItem>
 
                 <MenuItem
+                    Header="CurseForge"
+                    Command="{Binding OpenCurseForgeCommand}">
+
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Icons/CurseForge.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem
                     Header="Check for _Updates"
                     Command="{Binding CheckForAppUpdatesCommand}">
 

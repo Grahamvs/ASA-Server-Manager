@@ -25,6 +25,7 @@
 		<None Remove="Resources\Icons\Checkbox_Checked.png" />
 		<None Remove="Resources\Icons\Checkbox_Indeterminate.png" />
 		<None Remove="Resources\Icons\Checkbox_Unchecked.png" />
+		<None Remove="Resources\Icons\CurseForge.png" />
 		<None Remove="Resources\Icons\Delete.png" />
 		<None Remove="Resources\Icons\Document_White.png" />
 		<None Remove="Resources\Icons\Document_White_Edit.png" />
@@ -76,6 +77,7 @@
 		<Resource Include="Resources\Icons\Checkbox_Checked.png" />
 		<Resource Include="Resources\Icons\Checkbox_Indeterminate.png" />
 		<Resource Include="Resources\Icons\Checkbox_Unchecked.png" />
+		<Resource Include="Resources\Icons\CurseForge.png" />
 		<Resource Include="Resources\Icons\Delete.png" />
 		<Resource Include="Resources\Icons\Document_White.png" />
 		<Resource Include="Resources\Icons\Document_White_Edit.png" />
