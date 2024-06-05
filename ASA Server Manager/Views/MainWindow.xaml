@@ -373,7 +373,7 @@
 
                 <MenuItem
                     Header="Server Config _Wiki"
-                    Command="{Binding OpenFAQCommand}"
+                    Command="{Binding OpenWikiCommand}"
                     InputGestureText="F1">
 
                     <MenuItem.Icon>
