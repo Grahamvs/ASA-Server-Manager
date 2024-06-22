@@ -846,7 +846,7 @@
                             VerticalAlignment="Center"
                             AcceptsReturn="False"
                             MinLines="3"
-                            Text="{Binding CurrentProfile.AdditionalArguments}" />
+                            Text="{Binding CurrentProfile.AdditionalArguments, UpdateSourceTrigger=PropertyChanged}" />
 
                     </StackPanel>
                 </Expander>
