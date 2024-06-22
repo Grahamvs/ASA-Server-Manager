@@ -191,7 +191,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
 
     public ICommand OpenFolderCommand => _serverHelper.OpenFolderCommand;
 
-    public ICommand OpenIniFileCommand => _serverHelper.OpenIniFileCommand;
+    public ICommand OpenArkConfigFileCommand => _serverHelper.OpenArkConfigFileCommand;
 
     public ICommand OpenWikiCommand { get; }
 

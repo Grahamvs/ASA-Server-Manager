@@ -19,7 +19,7 @@ public interface IServerHelper : INotifyPropertyChanged
 
     ICommand<ServerFolders> OpenFolderCommand { get; }
 
-    ICommand<IniFiles> OpenIniFileCommand { get; }
+    ICommand<ArkConfigFiles> OpenArkConfigFileCommand { get; }
 
     bool SteamCmdPathIsValid { get; }
 

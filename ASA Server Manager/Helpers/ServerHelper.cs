@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 using System.Reactive.Linq;
+using System.Windows;
 using ASA_Server_Manager.Common;
 using ASA_Server_Manager.Common.Commands;
 using ASA_Server_Manager.Configs;
@@ -60,8 +61,8 @@ public class ServerHelper : BindableBase, IServerHelper
         var openFolderCommand = new ActionCommand<ServerFolders>(ExecuteOpenFolderCommand, folder => GetFolder(folder).Exists);
         OpenFolderCommand = openFolderCommand;
 
-        var openIniFileCommand = new ActionCommand<IniFiles>(ExecuteOpenIniFileCommand);
-        OpenIniFileCommand = openIniFileCommand;
+        var openArkConfigFileCommand = new ActionCommand<ArkConfigFiles>(ExecuteOpenArkConfigFileCommand);
+        OpenArkConfigFileCommand = openArkConfigFileCommand;
 
         _appSettingsService
             .FromPropertyChangedPattern()
@@ -100,7 +101,7 @@ public class ServerHelper : BindableBase, IServerHelper
                 nameof(IAppSettings.ServerPath)
             )
             .Sample(TimeSpan.FromMilliseconds(300))
-            .Subscribe(_ => openIniFileCommand.RaiseCanExecuteChanged());
+            .Subscribe(_ => openArkConfigFileCommand.RaiseCanExecuteChanged());
 
         _workingDirectory = applicationService.WorkingDirectory;
 
@@ -140,7 +141,7 @@ public class ServerHelper : BindableBase, IServerHelper
 
     public ICommand<ServerFolders> OpenFolderCommand { get; }
 
-    public ICommand<IniFiles> OpenIniFileCommand { get; }
+    public ICommand<ArkConfigFiles> OpenArkConfigFileCommand { get; }
 
     public bool SteamCmdPathIsValid => IsFileValid(SteamCmdPath);
 
@@ -303,46 +304,58 @@ public class ServerHelper : BindableBase, IServerHelper
         _processHelper.CreateProcess("Explorer.exe", dir).Start();
     }
 
-    private void ExecuteOpenIniFileCommand(IniFiles iniFile)
+    private void ExecuteOpenArkConfigFileCommand(ArkConfigFiles arkConfigFile)
     {
         string fileName;
-        string folder = null;
-        bool exists;
+        string folder;
+        bool createIfNotFound = true;
 
-        switch (iniFile)
+        switch (arkConfigFile)
         {
-            case IniFiles.GUS:
-            case IniFiles.Game:
+            case ArkConfigFiles.GUS:
+            case ArkConfigFiles.Game:
+                createIfNotFound = false;
 
-                (var saveFolder, exists) = GetFolder(ServerFolders.ServerSave);
+                folder = _fileSystemService.Combine(
+                    GetFolder(ServerFolders.ServerSave).Folder,
+                    "Config",
+                    "WindowsServer"
+                );
 
-                if (exists)
-                {
-                    folder = _fileSystemService.Combine(
-                        saveFolder,
-                        "Config",
-                        "WindowsServer"
-                    );
-                }
+                fileName = arkConfigFile == ArkConfigFiles.GUS ? "GameUserSettings.ini" : "Game.ini";
 
-                fileName = iniFile == IniFiles.GUS ? "GameUserSettings.ini" : "Game.ini";
+
 
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(iniFile), iniFile, null);
+                throw new ArgumentOutOfRangeException(nameof(arkConfigFile), arkConfigFile, null);
         }
 
-        if (!exists)
+        var configFilePath = _fileSystemService.Combine(folder, fileName);
+
+        if (!_fileSystemService.FileExists(configFilePath))
         {
-            var message = $"Cannot find \"{fileName}\"!\r\n\r\nPlease ensure your server paths are correct, and that you have run the server at least once!";
-            _dialogService.ShowErrorMessage(message);
-            return;
+            if (createIfNotFound)
+            {
+                var result = _dialogService.ShowMessage($"Cannot find \"{fileName}\"!\r\n\r\nWould you like to create it?", "Open config", MessageBoxButton.YesNo);
+
+                if (result != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                _fileSystemService.WriteAllText(configFilePath, string.Empty);
+            }
+            else
+            {
+                var message = $"Cannot find \"{fileName}\"!\r\n\r\nPlease ensure your server paths are correct, and that you have run the server at least once!";
+                _dialogService.ShowErrorMessage(message);
+                return;
+            }
         }
 
-        var iniFilePath = _fileSystemService.Combine(folder, fileName);
-
-        _processHelper.RunWithShellExecute(iniFilePath);
+        _processHelper.RunWithShellExecute(configFilePath);
     }
 
     private string GetParentFolder(string path, string relativeTo)

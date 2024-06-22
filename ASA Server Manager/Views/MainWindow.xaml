@@ -269,8 +269,8 @@
 
                     <MenuItem
                         Header="GameUserSettings.ini"
-                        Command="{Binding OpenIniFileCommand}"
-                        CommandParameter="{x:Static enums:IniFiles.GUS}">
+                        Command="{Binding OpenArkConfigFileCommand}"
+                        CommandParameter="{x:Static enums:ArkConfigFiles.GUS}">
 
                         <MenuItem.Icon>
                             <Image Source="/Resources/Icons/Document_White_Edit.png" />
@@ -280,8 +280,8 @@
 
                     <MenuItem
                         Header="Game.ini"
-                        Command="{Binding OpenIniFileCommand}"
-                        CommandParameter="{x:Static enums:IniFiles.Game}">
+                        Command="{Binding OpenArkConfigFileCommand}"
+                        CommandParameter="{x:Static enums:ArkConfigFiles.Game}">
 
                         <MenuItem.Icon>
                             <Image Source="/Resources/Icons/Document_White_Edit.png" />

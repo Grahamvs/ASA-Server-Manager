@@ -1,8 +1,8 @@
 ﻿namespace ASA_Server_Manager.Enums
 {
-    public enum IniFiles
+    public enum ArkConfigFiles
     {
         GUS,
-        Game
+        Game,
     }
 }
