@@ -18,6 +18,8 @@ public interface IServerProfile : INotifyPropertyChanged, IHasChanges
 
     string ClusterID { get; set; }
 
+    bool ExclusiveJoin { get; set; }
+
     bool IsValid { get; }
 
     string MapID { get; set; }

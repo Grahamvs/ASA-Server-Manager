@@ -32,6 +32,7 @@ public class ServerArgumentBuilder
         AddSetting("AltSaveDirectoryName", profile.SaveDirectoryName);
         AddSetting("ServerAdminPassword", adminPassword);
         AddOption(profile.MaxPlayers is > 0, "WinLiveMaxPlayers", profile.MaxPlayers);
+        AddOption(profile.ExclusiveJoin, "ExclusiveJoin");
 
         // RCON Settings
         AddSetting("RCONEnabled", profile.RCONEnabled);

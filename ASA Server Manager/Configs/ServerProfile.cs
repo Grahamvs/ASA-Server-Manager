@@ -16,6 +16,7 @@ public class ServerProfile : BindableBase, IServerProfile
     private bool _allowCryoFridgeOnSaddle;
     private string _clusterDirOverride;
     private string _clusterID;
+    private bool _exclusiveJoin;
     private bool _hasChanges;
     private bool _isValid;
     private string _mapID;
@@ -77,6 +78,12 @@ public class ServerProfile : BindableBase, IServerProfile
     {
         get => _clusterID;
         set => SetProperty(ref _clusterID, value);
+    }
+
+    public bool ExclusiveJoin
+    {
+        get => _exclusiveJoin;
+        set => SetProperty(ref _exclusiveJoin, value);
     }
 
     [DoNotSerialize]
