@@ -289,6 +289,39 @@
 
                     </MenuItem>
 
+                    <MenuItem
+                        Header="AllowedCheaterAccountIDs.txt"
+                        Command="{Binding OpenArkConfigFileCommand}"
+                        CommandParameter="{x:Static enums:ArkConfigFiles.AllowedCheatersList}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Document_White_Edit.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="PlayersExclusiveJoinList.txt"
+                        Command="{Binding OpenArkConfigFileCommand}"
+                        CommandParameter="{x:Static enums:ArkConfigFiles.ExclusiveJoinList}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Document_White_Edit.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
+                    <MenuItem
+                        Header="PlayersJoinNoCheckList.txt"
+                        Command="{Binding OpenArkConfigFileCommand}"
+                        CommandParameter="{x:Static enums:ArkConfigFiles.JoinNoCheckList}">
+
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/Icons/Document_White_Edit.png" />
+                        </MenuItem.Icon>
+
+                    </MenuItem>
+
                 </MenuItem>
 
                 <MenuItem Header="_Execute">

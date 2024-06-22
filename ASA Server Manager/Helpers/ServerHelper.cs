@@ -324,8 +324,21 @@ public class ServerHelper : BindableBase, IServerHelper
 
                 fileName = arkConfigFile == ArkConfigFiles.GUS ? "GameUserSettings.ini" : "Game.ini";
 
+                break;
 
+            case ArkConfigFiles.AllowedCheatersList:
+                (folder, _) = GetFolder(ServerFolders.ServerPath);
+                fileName = "AllowedCheaterAccountIDs.txt";
+                break;
 
+            case ArkConfigFiles.ExclusiveJoinList:
+                (folder, _) = GetFolder(ServerFolders.ServerPath);
+                fileName = "PlayersExclusiveJoinList.txt";
+                break;
+
+            case ArkConfigFiles.JoinNoCheckList:
+                (folder, _) = GetFolder(ServerFolders.ServerPath);
+                fileName = "PlayersJoinNoCheckList.txt";
                 break;
 
             default:

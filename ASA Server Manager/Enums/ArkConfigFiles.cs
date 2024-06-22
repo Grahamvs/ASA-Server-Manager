@@ -4,5 +4,8 @@
     {
         GUS,
         Game,
+        AllowedCheatersList,
+        ExclusiveJoinList,
+        JoinNoCheckList,
     }
 }
