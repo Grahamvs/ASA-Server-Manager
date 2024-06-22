@@ -28,9 +28,9 @@ public class ServerArgumentBuilder
         var adminPassword = StringEncryptor.Decrypt(profile.AdminPassword);
 
         // Server Settings
-        AddSetting("ServerPassword", serverPassword);
+        AddSetting(true, "ServerPassword", serverPassword);
         AddSetting("AltSaveDirectoryName", profile.SaveDirectoryName);
-        AddSetting("ServerAdminPassword", adminPassword);
+        AddSetting(true, "ServerAdminPassword", adminPassword);
         AddOption(profile.MaxPlayers is > 0, "WinLiveMaxPlayers", profile.MaxPlayers);
         AddOption(profile.ExclusiveJoin, "ExclusiveJoin");
 
