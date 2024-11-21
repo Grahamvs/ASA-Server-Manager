@@ -83,7 +83,7 @@ jobs:
     # Zip up files created by "Framework" profile
     - name: Zip Framework profile files
       run: |
-        Get-ChildItem "./ASA Server Manager/bin/Publish/Framework/*" -Recurse |
+        Get-ChildItem "./ASA Server Manager/bin/Publish/FrameworkDependent/*" -Recurse |
         Where-Object { !$_.FullName.EndsWith('.pdb') } |
         Compress-Archive -DestinationPath "./bin/Publish/ASA Server Manager v${{ steps.version.outputs.VERSION }} (Framework).zip"
       shell: pwsh
