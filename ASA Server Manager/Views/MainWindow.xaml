@@ -573,7 +573,14 @@
                         <!-- Exclusive Join -->
                         <controls:SettingsControl
                             Label="Exclusive Join:"
-                            InfoText="Required to enable the use of:&#x0a;&#x2022; PlayersExclusiveJoinList.txt&#x0a;&#x2022; PlayersJoinNoCheckList.txt&#x0a;&#x2022; AllowedCheaterAccountIDs.txt">
+                            InfoText="Required to enable the use of:
+                            &#x0a;&#x2022; PlayersExclusiveJoinList.txt
+                            &#x0a;&#x2022; PlayersJoinNoCheckList.txt
+                            &#x0a;&#x2022; AllowedCheaterAccountIDs.txt
+                            &#x0a;
+                            &#x0a;Note: The PlayersExclusiveJoinList and PlayersJoinNoCheckList files
+                            &#x0a;should be placed in &quot;/ShooterGame/Binaries/&lt;PLATFORM&gt;/&quot;,
+                            &#x0a;while AllowedCheaterAccountIDs goes in &quot;/ShooterGame/Saved/&quot;">
                             <CheckBox
                                 IsChecked="{Binding CurrentProfile.ExclusiveJoin, UpdateSourceTrigger=PropertyChanged}" />
                         </controls:SettingsControl>
