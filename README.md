@@ -17,10 +17,12 @@ The ASA Server Manager is developed using C# and WPF using Windows.
 
 ## Requirements & Setup
 The tool is available in two versions:
-- "Framework":
-    This version is compact but requires the installation of the [.NET 8.0 runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) on the system.
+- "**Framework**":
+    This version is compact but requires the installation of the [.NET 9.0 runtime](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) on the system.
 
-- "Self-contained".
+    **Note**: v0.1.10 and below require the [.NET 8.0 runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+
+- "**Self-contained**".
     This version is larger as it incorporates the .NET runtime, and does not need any additional runtimes to be installed.
 
 The tool is portable, so you just need to unzip and run it.
