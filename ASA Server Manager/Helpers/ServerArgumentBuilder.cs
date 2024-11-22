@@ -29,7 +29,7 @@ public class ServerArgumentBuilder
 
         // Server Settings
         AddSetting(true, "ServerPassword", serverPassword);
-        AddSetting("AltSaveDirectoryName", profile.SaveDirectoryName);
+        AddSetting("AltSaveDirectoryName", profile.SaveDirectoryName.IsNullOrWhiteSpace() ? Defaults.SaveFolder : profile.SaveDirectoryName);
         AddSetting(true, "ServerAdminPassword", adminPassword);
         AddOption(profile.MaxPlayers is > 0, "WinLiveMaxPlayers", profile.MaxPlayers);
         AddOption(profile.ExclusiveJoin, "ExclusiveJoin");
