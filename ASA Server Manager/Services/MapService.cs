@@ -11,17 +11,17 @@ public class MapService : BindableBase, IMapService
 
     private static readonly IReadOnlyList<MapDetails> OfficialMapIDs =
     [
-        new MapDetails {ID = "TheIsland_WP", Name = "The Island"},
-        new MapDetails {ID = "ScorchedEarth_WP", Name = "Scorched Earth"},
-        new MapDetails {ID = "thecenter_wp", Name = "The Center"},
-        new MapDetails {ID = "Aberration_WP", Name = "Aberration"},
+        new() {ID = "TheIsland_WP", Name = "The Island"},
+        new() {ID = "ScorchedEarth_WP", Name = "Scorched Earth"},
+        new() {ID = "TheCenter_WP", Name = "The Center"},
+        new() {ID = "Aberration_WP", Name = "Aberration"},
     ];
 
+    private readonly List<MapDetails> _customMaps = [];
     private readonly IDialogService _dialogService;
     private readonly string _filePath = "AvailableMaps.txt";
     private readonly IFileSystemService _fileSystemService;
     private readonly ISerializer _serializer;
-    private List<MapDetails> _customMaps = [];
 
     #endregion
 
@@ -59,6 +59,7 @@ public class MapService : BindableBase, IMapService
         _customMaps.Clear();
 
         List<MapDetails> mapsList = null;
+
         try
         {
             if (_fileSystemService.FileExists(_filePath))
@@ -92,7 +93,7 @@ public class MapService : BindableBase, IMapService
 
         var officialIDs = OfficialMapIDs.Select(m => m.ID).ToList();
 
-        _customMaps = maps.Where(map => !officialIDs.Contains(map.ID)).ToList();
+        _customMaps.AddRange(maps.Where(map => !officialIDs.Contains(map.ID)));
 
         RaisePropertiesChanged(nameof(CustomMaps), nameof(AvailableMaps));
     }
