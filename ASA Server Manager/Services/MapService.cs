@@ -15,6 +15,7 @@ public class MapService : BindableBase, IMapService
         new() {ID = "ScorchedEarth_WP", Name = "Scorched Earth"},
         new() {ID = "TheCenter_WP", Name = "The Center"},
         new() {ID = "Aberration_WP", Name = "Aberration"},
+        new() {ID = "Extinction_WP", Name = "Extinction"},
     ];
 
     private readonly List<MapDetails> _customMaps = [];
