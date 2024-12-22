@@ -608,7 +608,9 @@
                         <!-- Cluster Dir Override -->
                         <controls:SettingsControl
                             Label="Cluster Dir Override:"
-                            InfoText="Specifies cross-server storage location for Cluster transfers.&#x0a;&#x0a;Note: This path can be relative to either SteamCMD.exe or the app depending on the Server Type setting.">
+                            InfoText="Specifies cross-server storage location for Cluster transfers.
+                            &#x0a;
+                            &#x0a;Note: This path can be relative to either SteamCMD.exe or the app depending on the Server Type setting.">
 
                             <controls:HintedTextBox
                                 Text="{Binding CurrentProfile.ClusterDirOverride, UpdateSourceTrigger=PropertyChanged}"
@@ -701,7 +703,10 @@
                         <!-- RCON Port -->
                         <controls:SettingsControl
                             Label="RCON Port:"
-                            InfoText="Specifies the optional TCP RCON Port.&#x0a;&#x0a;This cannot be the same as the Port or QueryPort.&#x0a;Range is between 1024 and 49151.">
+                            InfoText="Specifies the optional TCP RCON Port.
+                            &#x0a;
+                            &#x0a;This cannot be the same as the Port or QueryPort.
+                            &#x0a;Range is between 1024 and 49151.">
                             <controls:NumericSpinner
                                 MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
                                 MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
@@ -753,7 +758,10 @@
                         <!-- Port -->
                         <controls:SettingsControl
                             Label="Port:"
-                            InfoText="This is the server port used to host the dedicated server on.&#x0a;&#x0a;This cannot be the same as the QueryPort or RCON Port.&#x0a;Range is between 1024 and 49151.">
+                            InfoText="This is the server port used to host the dedicated server on.
+                            &#x0a;
+                            &#x0a;This cannot be the same as the QueryPort or RCON Port.
+                            &#x0a;Range is between 1024 and 49151.">
                             <controls:NumericSpinner
                                 MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
                                 MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
@@ -764,7 +772,10 @@
                         <!-- Query Port -->
                         <controls:SettingsControl
                             Label="Query Port:"
-                            InfoText="Specifies the UDP Steam Query Port.&#x0a;&#x0a;This cannot be the same as the Port or RCON Port.&#x0a;Range is between 1024 and 49151.">
+                            InfoText="Specifies the UDP Steam Query Port.
+                            &#x0a;
+                            &#x0a;This cannot be the same as the Port or RCON Port.
+                            &#x0a;Range is between 1024 and 49151.">
                             <controls:NumericSpinner
                                 MinValue="{Binding Source={x:Static configs:Defaults.MinServerPort}, Converter={converters:IntToDoubleConverter}}"
                                 MaxValue="{Binding Source={x:Static configs:Defaults.MaxServerPort}, Converter={converters:IntToDoubleConverter}}"
@@ -802,7 +813,9 @@
                         <!-- Random Supply Crate Points -->
                         <controls:SettingsControl
                             Label="Random Supply Crate Points:"
-                            InfoText="If checked, supply drops are in random locations.&#x0a;&#x0a;Note: This setting is known to cause artifacts becoming inaccessible on Ragnarok if active.">
+                            InfoText="If checked, supply drops are in random locations.
+                            &#x0a;
+                            &#x0a;Note: This setting is known to cause artifacts becoming inaccessible on Ragnarok if active.">
                             <CheckBox IsChecked="{Binding CurrentProfile.RandomSupplyCratePoints}" />
                         </controls:SettingsControl>
 
