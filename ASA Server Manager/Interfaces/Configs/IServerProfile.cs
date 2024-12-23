@@ -18,6 +18,8 @@ public interface IServerProfile : INotifyPropertyChanged, IHasChanges
 
     string ClusterID { get; set; }
 
+    bool ConvertToStore { get; set; }
+
     bool ExclusiveJoin { get; set; }
 
     bool IsValid { get; }
@@ -73,6 +75,8 @@ public interface IServerProfile : INotifyPropertyChanged, IHasChanges
     string SessionName { get; set; }
 
     bool UseBattlEye { get; set; }
+
+    bool UseStore { get; set; }
 
     #endregion
 

@@ -16,6 +16,7 @@ public class ServerProfile : BindableBase, IServerProfile
     private bool _allowCryoFridgeOnSaddle;
     private string _clusterDirOverride;
     private string _clusterID;
+    private bool _convertToStore;
     private bool _exclusiveJoin;
     private bool _hasChanges;
     private bool _isValid;
@@ -45,6 +46,7 @@ public class ServerProfile : BindableBase, IServerProfile
     private bool _serverRconOutputTribeLogs;
     private string _sessionName;
     private bool _useBattlEye;
+    private bool _useStore;
 
     #endregion
 
@@ -78,6 +80,12 @@ public class ServerProfile : BindableBase, IServerProfile
     {
         get => _clusterID;
         set => SetProperty(ref _clusterID, value);
+    }
+
+    public bool ConvertToStore
+    {
+        get => _convertToStore;
+        set => SetProperty(ref _convertToStore, value);
     }
 
     public bool ExclusiveJoin
@@ -256,6 +264,12 @@ public class ServerProfile : BindableBase, IServerProfile
     {
         get => _useBattlEye;
         set => SetProperty(ref _useBattlEye, value);
+    }
+
+    public bool UseStore
+    {
+        get => _useStore;
+        set => SetProperty(ref _useStore, value);
     }
 
     #endregion

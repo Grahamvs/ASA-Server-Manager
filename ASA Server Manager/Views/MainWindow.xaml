@@ -847,6 +847,24 @@
                             <CheckBox IsChecked="{Binding CurrentProfile.ServerGameLogIncludeTribeLogs}" />
                         </controls:SettingsControl>
 
+                        <controls:SettingsControl
+                            Label="UseStore:"
+                            InfoText="Combines the current player and tribe data into the .ark save file.
+                            &#x0a;
+                            &#x0a;Note: You need to run -converttostore once to upgrade existing servers.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.UseStore}" />
+                        </controls:SettingsControl>
+
+                        <controls:SettingsControl
+                            Label="ConvertToStore:"
+                            InfoText="Upgrades existing servers to allow -usestore.
+                            &#x0a;
+                            &#x0a;Note:
+                            &#x0a;&#x2022; Only needs to be run once.
+                            &#x0a;&#x2022; Requires -usestore.">
+                            <CheckBox IsChecked="{Binding CurrentProfile.ConvertToStore}" />
+                        </controls:SettingsControl>
+
                     </StackPanel>
 
                 </Expander>

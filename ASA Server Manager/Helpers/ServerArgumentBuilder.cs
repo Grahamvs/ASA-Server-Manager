@@ -65,6 +65,8 @@ public class ServerArgumentBuilder
         AddOption(!profile.UseBattlEye, "NoBattlEye");
         AddOption(profile.ServerGameLog, "ServerGameLog");
         AddOption(profile.ServerGameLogIncludeTribeLogs, "ServerGameLogIncludeTribeLogs");
+        AddOption(profile.UseStore, "UseStore");
+        AddOption(profile.ConvertToStore, "ConvertToStore");
 
         var availableModIDs = availableModsList?.Select(mod => mod.ID).ToList() ?? [];
 
