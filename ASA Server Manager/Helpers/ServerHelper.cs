@@ -227,7 +227,10 @@ public class ServerHelper : BindableBase, IServerHelper
     {
         BackingUpServer = true;
 
-        await ExecuteAndWaitForProcessAsync(_appSettingsService.BackupExecutablePath).ConfigureAwait(false);
+        var exePath = _appSettingsService.BackupExecutablePath;
+        var workingDir = _fileSystemService.GetDirectoryName(exePath);
+
+        await ExecuteAndWaitForProcessAsync(exePath, workingDirectory: workingDir).ConfigureAwait(false);
 
         BackingUpServer = false;
     }
@@ -281,10 +284,10 @@ public class ServerHelper : BindableBase, IServerHelper
             ? new ProcessMonitor(_fileSystemService.GetFileNameWithoutExtension(path))
             : null;
 
-    private async Task ExecuteAndWaitForProcessAsync(string exe, string arguments = null)
+    private async Task ExecuteAndWaitForProcessAsync(string exe, string arguments = null, string workingDirectory = null)
     {
         var process = _processHelper.CreateProcess(exe, arguments);
-
+        process.StartInfo.WorkingDirectory = workingDirectory ?? string.Empty;
         process.Start();
 
         await Task.Run(process.WaitForExit);
