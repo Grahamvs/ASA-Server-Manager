@@ -584,8 +584,14 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         if (obj is not SelectableMod mod)
             return false;
 
-        if (ModFilterText.IsNullOrEmpty())
+        var modFilterText = ModFilterText;
+        if (modFilterText.IsNullOrEmpty())
             return true;
+
+        var filters = modFilterText
+            .Split('|')
+            .Where(val => !val.IsNullOrEmpty())
+            .ToList();
 
         var mode = mod.IsPassive
             ? ModMode.Passive
@@ -593,14 +599,24 @@ public class MainViewModel : WindowViewModel, IMainViewModel
                 ? ModMode.Enabled
                 : ModMode.Disabled;
 
-        return CheckValue(mode.ToString())
-            || CheckValue(mod.ID.ToString())
-            || CheckValue(mod.Name)
-            || CheckValue(mod.Comments);
+        var searchValues = new List<string>
+        {
+            mode.ToString(),
+            mod.ID.ToString(),
+            mod.Name,
+            mod.Comments
+        };
+
+        return filters
+            .Any(filter =>
+                searchValues
+                    .Where(value => !value.IsNullOrWhiteSpace())
+                    .Any(value => CheckValue(value ?? string.Empty, filter))
+            );
 
         //// Local Functions \\\\
 
-        bool CheckValue(string value) => (value ?? string.Empty).Contains(ModFilterText, StringComparison.OrdinalIgnoreCase);
+        bool CheckValue(string value, string filter) => value.Contains(filter, StringComparison.OrdinalIgnoreCase);
     }
 
     private void RefreshModList()

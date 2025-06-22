@@ -48,7 +48,9 @@ To use a mod from the Available Mods list, go to the Mods group, find the desire
 - Passive: The mod's assets will be loaded by the server but the rest of the mod will not be active. (Note: Currently, only "Love Ascended" and "Winter Wonderland" utilize this state.)
 
 ## Can I filter the mod list?
-Yes, you can filter the mod list by typing in the filter box. The list will automatically update to show only the mods that match the filter. The filter is not case-sensitive, and checks the mod's name, ID and description.
+Yes, you can filter the mod list by typing keywords into the filter box. The list will automatically update to display only the mods that match your filter. Filtering is case-insensitive and searches the mod's name, ID, and comments. You can also filter for mods that are set to enabled, disabled, or passive. To search for multiple keywords, separate them with the pipe character '|' (for example, "cryo|admin" will show any mod containing either "cryo" or "admin", such as "Super Cryo Storage" and "Admin Panel").
+
+Note: Currently, you cannot apply multiple filters simultaneously (for example, showing only mods with the word "cryo" that are also enabled). This feature may be added in future releases.
 
 ## Can I filter the mod list to only show disabled, enabled, or passive mods?
 Yes. You can use the words "enabled", "disabled", or "passive" in the filter box to show only mods that match the filter.
