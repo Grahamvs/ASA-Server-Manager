@@ -17,6 +17,7 @@ public class MapService : BindableBase, IMapService
         new() {ID = "Aberration_WP", Name = "Aberration"},
         new() {ID = "Extinction_WP", Name = "Extinction"},
         new() {ID = "Ragnarok_WP", Name = "Ragnarok"},
+        new() {ID = "Astraeos_WP", Name = "Astraeos"},
     ];
 
     private readonly List<MapDetails> _customMaps = [];
