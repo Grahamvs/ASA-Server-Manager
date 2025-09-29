@@ -11,12 +11,16 @@ public class MapService : BindableBase, IMapService
 
     private static readonly IReadOnlyList<MapDetails> OfficialMapIDs =
     [
+        // Canonical Maps
         new() {ID = "TheIsland_WP", Name = "The Island"},
         new() {ID = "ScorchedEarth_WP", Name = "Scorched Earth"},
         new() {ID = "TheCenter_WP", Name = "The Center"},
         new() {ID = "Aberration_WP", Name = "Aberration"},
         new() {ID = "Extinction_WP", Name = "Extinction"},
+
+        // DLC Maps
         new() {ID = "Ragnarok_WP", Name = "Ragnarok"},
+        new() {ID = "Valguero_WP", Name = "Valguero"},
         new() {ID = "Astraeos_WP", Name = "Astraeos"},
     ];
 
