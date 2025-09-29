@@ -62,9 +62,12 @@ public class UpdateService : IUpdateService
     public async Task CheckForUpdates(bool showNoUpdate, bool overrideIgnore, IToastService toastService = null)
     {
         var releases = await _gitHubClient.Repository.Release.GetAll("Grahamvs", "ASA-Server-Manager");
-        var latestRelease = releases[0];
 
-        var latestVersion = GetVersion(latestRelease.TagName);
+        var latestRelease = _appSettingsService.IncludePreReleases
+            ? releases.FirstOrDefault()
+            : releases.FirstOrDefault(release => !release.Prerelease);
+
+        var latestVersion = GetVersion(latestRelease?.TagName);
 
         toastService ??= _toastServiceFunc(Application.Current?.MainWindow);
 
@@ -86,7 +89,11 @@ public class UpdateService : IUpdateService
                 _appSettingsService.IgnoredAppVersion = null;
             }
 
-            toastService.ShowInformation($"Version {latestVersion} is available.", LaunchLatestRelease, IgnoreLatestRelease);
+            var versionText = latestRelease.Prerelease
+                ? $"{latestVersion} (Pre-release)"
+                : $"{latestVersion}";
+
+            toastService.ShowInformation($"Version {versionText} is available.", LaunchLatestRelease, IgnoreLatestRelease);
         }
         else if (showNoUpdate)
         {
