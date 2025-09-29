@@ -14,14 +14,17 @@ public class UpdateService : IUpdateService
 {
     #region Private Fields
 
+    private const string OwnerID = "Grahamvs";
+    private const string RepoID = "ASA-Server-Manager";
+
     private readonly IAppSettingsService _appSettingsService;
     private readonly Version _currentVersion;
     private readonly IDialogService _dialogService;
     private readonly GitHubClient _gitHubClient;
     private readonly IProcessHelper _processHelper;
     private readonly Func<Window, IToastService> _toastServiceFunc;
-    private CancellationTokenSource _cancellationTokenSource;
     private readonly Regex _versionRegex = new(@"(\d+\.?){1,4}");
+    private CancellationTokenSource _cancellationTokenSource;
 
     #endregion
 
@@ -40,7 +43,7 @@ public class UpdateService : IUpdateService
         _dialogService = dialogService;
         _toastServiceFunc = toastServiceFunc;
 
-        _gitHubClient = new GitHubClient(new ProductHeaderValue("Grahamvs"));
+        _gitHubClient = new GitHubClient(new ProductHeaderValue(OwnerID));
         _currentVersion = Version.Parse(applicationService.VersionString);
 
         _appSettingsService
@@ -61,7 +64,7 @@ public class UpdateService : IUpdateService
 
     public async Task CheckForUpdates(bool showNoUpdate, bool overrideIgnore, IToastService toastService = null)
     {
-        var releases = await _gitHubClient.Repository.Release.GetAll("Grahamvs", "ASA-Server-Manager");
+        var releases = await _gitHubClient.Repository.Release.GetAll(OwnerID, RepoID);
 
         var latestRelease = _appSettingsService.IncludePreReleases
             ? releases.FirstOrDefault()
