@@ -13,6 +13,7 @@ public class AppSettings : BindableBase, IAppSettings
     private string _backupExecutablePath;
     private UpdateFrequency _checkForAppUpdates = UpdateFrequency.OnStart;
     private string _ignoredAppVersion;
+    private bool _includePreReleases;
     private DateTime? _lastCheckedForAppUpdate;
     private LinkedList<string> _recentProfiles = new();
     private int _recentProfilesLimit = 5;
@@ -48,6 +49,12 @@ public class AppSettings : BindableBase, IAppSettings
     {
         get => _ignoredAppVersion;
         set => SetProperty(ref _ignoredAppVersion, value);
+    }
+
+    public bool IncludePreReleases
+    {
+        get => _includePreReleases;
+        set => SetProperty(ref _includePreReleases, value);
     }
 
     public DateTime? LastCheckedForAppUpdate

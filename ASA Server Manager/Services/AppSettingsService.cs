@@ -67,6 +67,12 @@ public class AppSettingsService : BindableBase, IAppSettingsService
         set => _appSettings.IgnoredAppVersion = value;
     }
 
+    public bool IncludePreReleases
+    {
+        get => _appSettings.IncludePreReleases;
+        set => _appSettings.IncludePreReleases = value;
+    }
+
     public DateTime? LastCheckedForAppUpdate
     {
         get => _appSettings.LastCheckedForAppUpdate;

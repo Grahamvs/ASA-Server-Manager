@@ -15,6 +15,8 @@ public interface IAppSettings : INotifyPropertyChanged
 
     string IgnoredAppVersion { get; set; }
 
+    bool IncludePreReleases { get; set; }
+
     DateTime? LastCheckedForAppUpdate { get; set; }
 
     string LastProfile { get; }
