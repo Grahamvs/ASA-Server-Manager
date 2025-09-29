@@ -36,7 +36,7 @@ public partial class App
                 container.GetInstance<IServerProfileService>().LoadLastProfile();
                 container.GetInstance<IModService>().Load();
 
-                CheckForUpdates(container.GetInstance<IUpdateService>(), appSettingsService.CheckForAppUpdates);
+                CheckForUpdates(container.GetInstance<Func<IUpdateService>>(), appSettingsService.CheckForAppUpdates);
 
                 Current.MainWindow = viewService.CreateWindow<IMainViewModel>();
 
@@ -73,7 +73,7 @@ public partial class App
         SystemParameters.StaticPropertyChanged += (sender, e) => { SetAlignmentValue(); };
     }
 
-    private void CheckForUpdates(IUpdateService updateService, UpdateFrequency frequency)
+    private void CheckForUpdates(Func<IUpdateService> updateServiceFunc, UpdateFrequency frequency)
     {
         switch (frequency)
         {
@@ -81,11 +81,11 @@ public partial class App
                 return;
 
             case UpdateFrequency.OnStart:
-                updateService.CheckForUpdates(false, false);
+                updateServiceFunc?.Invoke().CheckForUpdates(false, false);
                 break;
 
             default:
-                updateService.Start();
+                updateServiceFunc?.Invoke().Start();
                 break;
         }
     }

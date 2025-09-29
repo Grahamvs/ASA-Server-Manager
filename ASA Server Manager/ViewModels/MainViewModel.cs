@@ -34,7 +34,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
     private readonly IServerHelper _serverHelper;
     private readonly IServerProfileService _serverProfileService;
     private readonly Func<Window, IToastService> _toastServiceFunc;
-    private readonly IUpdateService _updateService;
+    private readonly Lazy<IUpdateService> _updateService;
     private readonly IViewService _viewService;
     private IDisposable _commandToken;
     private CompositeDisposable _currentProfileSubscriptions;
@@ -61,7 +61,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         IModService modService,
         IFileSystemService fileSystemService,
         IDialogService dialogService,
-        IUpdateService updateService,
+        Func<IUpdateService> updateServiceFunc,
         IProcessHelper processHelper,
         Func<Window, IToastService> toastServiceFunc,
         IViewService viewService
@@ -75,7 +75,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         _modService = modService;
         _fileSystemService = fileSystemService;
         _dialogService = dialogService;
-        _updateService = updateService;
+        _updateService = new Lazy<IUpdateService>(updateServiceFunc);
         _processHelper = processHelper;
         _toastServiceFunc = toastServiceFunc;
         _viewService = viewService;
@@ -335,7 +335,7 @@ public class MainViewModel : WindowViewModel, IMainViewModel
         }
     }
 
-    private void ExecuteCheckForAppUpdatesCommand() => _updateService.CheckForUpdates(true, true, _toastService);
+    private void ExecuteCheckForAppUpdatesCommand() => _updateService.Value.CheckForUpdates(true, true, _toastService);
 
     private void ExecuteDonateCommand()
     {
