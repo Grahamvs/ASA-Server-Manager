@@ -30,6 +30,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
     private string _busyMessage;
     private UpdateFrequency _checkForAppUpdates;
     private IDisposable _commandToken;
+    private bool _includePreReleases;
     private bool _progressIsIndeterminate;
     private double _progressValue;
     private int _recentProfilesLimit;
@@ -135,6 +136,12 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         set => SetProperty(ref _checkForAppUpdates, value);
     }
 
+    public bool IncludePreReleases
+    {
+        get => _includePreReleases;
+        set => SetProperty(ref _includePreReleases, value);
+    }
+
     public ICommand InstallSteamCmdCommand { get; }
 
     public bool IsBusy => _isBusyHelper.HasTokens;
@@ -208,6 +215,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         AutoSaveProfile = _appSettingsService.AutoSaveProfile;
         BackupExecutablePath = _appSettingsService.BackupExecutablePath;
         CheckForAppUpdates = _appSettingsService.CheckForAppUpdates;
+        IncludePreReleases = _appSettingsService.IncludePreReleases;
         RecentProfilesLimit = _appSettingsService.RecentProfilesLimit;
         SelectedServerType = _appSettingsService.ServerType;
         ServerPath = _appSettingsService.ServerPath;
@@ -355,6 +363,7 @@ public class SettingsViewModel : WindowViewModel, ISettingsViewModel
         _appSettingsService.AutoSaveProfile = AutoSaveProfile;
         _appSettingsService.BackupExecutablePath = BackupExecutablePath;
         _appSettingsService.CheckForAppUpdates = CheckForAppUpdates;
+        _appSettingsService.IncludePreReleases = IncludePreReleases;
         _appSettingsService.RecentProfilesLimit = RecentProfilesLimit;
         _appSettingsService.ServerType = SelectedServerType;
         _appSettingsService.ShowModIDColumn = ShowModIDColumn;

@@ -54,7 +54,7 @@
 
         <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
             <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="Margin" Value="5" />
+            <Setter Property="Margin" Value="4,5" />
         </Style>
 
         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
@@ -88,7 +88,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0">
+            <StackPanel Grid.Row="0" Grid.IsSharedSizeScope="True">
 
                 <GroupBox Header="Server" Grid.IsSharedSizeScope="True">
 
@@ -195,12 +195,12 @@
 
                 </GroupBox>
 
-                <GroupBox Header="Options" Grid.IsSharedSizeScope="True">
-
+                <GroupBox Header="Updates">
                     <StackPanel Margin="5">
 
                         <!-- Check for App Updates -->
-                        <controls:SettingsControl Label="Check for App Updates:">
+                        <controls:SettingsControl Label="Check for updates:">
+
                             <ComboBox
                                 SelectedValue="{Binding CheckForAppUpdates}"
                                 ItemsSource="{Binding Source={x:Type enums:UpdateFrequency}, Converter={converters:EnumToItemsSourceConverter}}"
@@ -217,7 +217,19 @@
                                 </ComboBox.ItemTemplate>
 
                             </ComboBox>
+
                         </controls:SettingsControl>
+
+                        <!-- Auto Save Profiles -->
+                        <controls:SettingsControl Label="Include Pre-releases:">
+                            <CheckBox IsChecked="{Binding IncludePreReleases}" />
+                        </controls:SettingsControl>
+
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Options">
+                    <StackPanel Margin="5">
 
                         <!-- Auto Save Profiles -->
                         <controls:SettingsControl Label="Auto Save Profiles:">
@@ -244,7 +256,6 @@
                         </controls:SettingsControl>
 
                     </StackPanel>
-
                 </GroupBox>
 
             </StackPanel>
