@@ -64,17 +64,13 @@ public class UpdateService : IUpdateService
 
     public async Task CheckForUpdates(bool showNoUpdate, bool overrideIgnore, IToastService toastService = null)
     {
-        var releases = await _gitHubClient.Repository.Release.GetAll(OwnerID, RepoID);
-
-        var latestRelease = _appSettingsService.IncludePreReleases
-            ? releases.FirstOrDefault()
-            : releases.FirstOrDefault(release => !release.Prerelease);
-
-        var latestVersion = GetVersion(latestRelease?.TagName);
+        var latest = (await GetValidReleases())
+            .OrderByDescending(x => x.version)
+            .FirstOrDefault();
 
         toastService ??= _toastServiceFunc(Application.Current?.MainWindow);
 
-        if (latestVersion is null)
+        if (latest.version is not { } latestVersion)
         {
             toastService.ShowError("Error checking for updates");
             return;
@@ -84,6 +80,8 @@ public class UpdateService : IUpdateService
 
         var ignoredVersion = GetVersion(_appSettingsService.IgnoredAppVersion);
         var newerThenIgnored = latestVersion.CompareTo(ignoredVersion) > 0;
+
+        var latestRelease = latest.release;
 
         if (newerThenCurrent && (overrideIgnore || newerThenIgnored))
         {
@@ -110,7 +108,7 @@ public class UpdateService : IUpdateService
 
         //// Local Functions \\\\
 
-        void LaunchLatestRelease() => _processHelper.RunWithShellExecute("https://github.com/Grahamvs/ASA-Server-Manager/releases/latest");
+        void LaunchLatestRelease() => _processHelper.RunWithShellExecute(latestRelease.HtmlUrl);
 
         void IgnoreLatestRelease()
         {
@@ -193,6 +191,22 @@ public class UpdateService : IUpdateService
     #endregion
 
     #region Private Methods
+
+    private async Task<IReadOnlyList<(Release release, Version version)>> GetValidReleases()
+    {
+        var includePreReleases = _appSettingsService.IncludePreReleases;
+
+        var releases = await _gitHubClient.Repository.Release.GetAll(OwnerID, RepoID);
+
+        var validReleases = releases
+            .Where(r => !r.Draft && (includePreReleases || !r.Prerelease))
+            .Select(r => (release: r, version: GetVersion(r.TagName)))
+            .Where(x => x.version != null)
+            .ToList()
+            .AsReadOnly();
+
+        return validReleases;
+    }
 
     private Version GetVersion(string version)
     {
