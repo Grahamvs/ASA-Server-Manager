@@ -17,11 +17,13 @@ public class MapService : BindableBase, IMapService
         new() {ID = "TheCenter_WP", Name = "The Center"},
         new() {ID = "Aberration_WP", Name = "Aberration"},
         new() {ID = "Extinction_WP", Name = "Extinction"},
+        new() {ID = "Genesis_WP", Name = "Genesis: Part 1"},
 
         // DLC Maps
         new() {ID = "Ragnarok_WP", Name = "Ragnarok"},
         new() {ID = "Valguero_WP", Name = "Valguero"},
         new() {ID = "Astraeos_WP", Name = "Astraeos"},
+        new() {ID = "LostColony_WP", Name = "Lost Colony"},
         new() {ID = "BobsMissions_WP", Name = "Club ARK"},
     ];
 
